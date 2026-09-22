@@ -230,17 +230,21 @@ main:focus {
   overflow: hidden;
 }
 
+/* Default (and no-JS) state: the first chapter is readable, the rest wait.
+   The motion module sets the hidden states itself once it boots, so a failed
+   script never leaves the page blank. */
 .story__scene {
   grid-area: 1 / 1;
   width: min(var(--shell), 100% - var(--gutter) * 2);
-  opacity: 0;
-  transform: translateY(28px);
-  will-change: opacity, transform;
+  will-change: opacity, transform, filter;
 }
 
-.story__scene[data-active="true"] {
+.story__scene + .story__scene {
+  opacity: 0;
+}
+
+html[data-motion="static"] .story__scene + .story__scene {
   opacity: 1;
-  transform: none;
 }
 
 .story__scene h1,
@@ -325,26 +329,10 @@ main:focus {
 
 /* --------------------------------------------------------------- reveals */
 
+/* Reveals are driven by the motion module, which hides them itself at boot.
+   Without JavaScript, or under reduced motion, they simply stay visible. */
 .reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition:
-    opacity 0.7s var(--ease-out),
-    transform 0.7s var(--ease-out);
-  transition-delay: calc(var(--i, 0) * 70ms);
-}
-
-.reveal[data-shown="true"] {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+  will-change: opacity, transform;
 }
 
 /* -------------------------------------------------------------- sections */
