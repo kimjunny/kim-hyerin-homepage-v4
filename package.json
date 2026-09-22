@@ -1,0 +1,16 @@
+{
+  "name": "kim-hyerin-homepage-v3",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check": "biome check ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.2",
+    "vite": "7.1.4"
+  }
+}
