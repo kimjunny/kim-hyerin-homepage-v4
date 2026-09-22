@@ -62,6 +62,29 @@ function heroIntro() {
 
 /* ------------------------------------------------- pinned, scrubbed story */
 
+/* Inner pages get the same assembling title, without a pinned stage. */
+function pageHero() {
+  const hero = document.querySelector(".page-hero")
+  const heading = hero?.querySelector("h1")
+  if (!heading) return
+  const split = splitText(heading, { chars: true, words: true, accessible: true })
+  createTimeline({ defaults: { ease: "outExpo" } })
+    .add(".page-hero__glow", { scale: [0.6, 1], opacity: [0, 1], duration: 1400 }, 0)
+    .add(
+      split.chars,
+      {
+        opacity: [0, 1],
+        y: ["0.7em", "0em"],
+        rotateX: [-88, 0],
+        duration: 1000,
+        delay: stagger(18),
+      },
+      80,
+    )
+    .add(hero.querySelector(".page-lede"), { opacity: [0, 1], y: [24, 0], duration: 800 }, "-=380")
+    .add(hero.querySelector(".eyebrow"), { opacity: [0, 1], duration: 600 }, 0)
+}
+
 function pinnedStory() {
   const story = document.querySelector(".story")
   const scenes = [...document.querySelectorAll(".story__scene")]
@@ -141,55 +164,104 @@ function pinnedStory() {
 
 /* --------------------------------------------------------- scroll reveals */
 
+/* anime's scroll thresholds proved unreliable for these one-shot entrances, so
+   the TRIGGER is an IntersectionObserver and anime owns only the animation.
+   Every animation also has a guaranteed end state: if an observer never fires,
+   the fallback sweep below reveals the element anyway. */
+function onVisible(el, run) {
+  if (!("IntersectionObserver" in window)) {
+    run()
+    return
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        io.unobserve(entry.target)
+        run()
+      }
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+  )
+  io.observe(el)
+}
+
 function reveals() {
-  // Section headings assemble word by word; bodies and rows rise in sequence.
-  for (const head of document.querySelectorAll(".section__head h2")) {
-    const split = splitText(head, { words: true, accessible: true })
-    animate(split.words, {
-      opacity: [0, 1],
-      y: ["0.6em", "0em"],
-      rotateX: [-70, 0],
-      duration: 900,
-      ease: "outExpo",
-      delay: stagger(45),
-      autoplay: onScroll({ target: head, enter: "bottom-=8% top", once: true }),
+  for (const head of document.querySelectorAll(".section__head")) {
+    const h2 = head.querySelector("h2")
+    if (!h2) continue
+    const split = splitText(h2, { words: true, accessible: true })
+    utils.set(split.words, { opacity: 0 })
+    const rest = [...head.children].filter((el) => el !== h2)
+    utils.set(rest, { opacity: 0 })
+    onVisible(head, () => {
+      animate(split.words, {
+        opacity: [0, 1],
+        y: ["0.6em", "0em"],
+        rotateX: [-70, 0],
+        duration: 900,
+        ease: "outExpo",
+        delay: stagger(45),
+      })
+      if (rest.length) {
+        animate(rest, { opacity: [0, 1], y: [18, 0], duration: 700, ease: "outExpo", delay: 160 })
+      }
+      head.dataset.shown = "true"
     })
   }
 
   for (const group of document.querySelectorAll(".rows, .cards")) {
-    const items = group.querySelectorAll(":scope > li")
+    const items = [...group.children]
     if (!items.length) continue
-    animate(items, {
-      opacity: [0, 1],
-      y: [46, 0],
-      scale: [0.97, 1],
-      filter: ["blur(6px)", "blur(0px)"],
-      duration: 900,
-      ease: "outExpo",
-      delay: stagger(90),
-      autoplay: onScroll({ target: group, enter: "bottom-=10% top", once: true }),
-      onComplete: () => {
-        for (const el of items) el.dataset.shown = "true"
-        utils.cleanInlineStyles(items)
-      },
+    utils.set(items, { opacity: 0 })
+    onVisible(group, () => {
+      animate(items, {
+        opacity: [0, 1],
+        y: [46, 0],
+        scale: [0.97, 1],
+        filter: ["blur(6px)", "blur(0px)"],
+        duration: 900,
+        ease: "outExpo",
+        delay: stagger(90),
+        onComplete: () => {
+          for (const el of items) el.dataset.shown = "true"
+        },
+      })
     })
   }
 
-  for (const el of document.querySelectorAll(".reveal:not(.section__head)")) {
-    if (el.closest(".rows, .cards")) continue
-    animate(el, {
-      opacity: [0, 1],
-      y: [34, 0],
-      duration: 800,
-      ease: "outExpo",
-      autoplay: onScroll({ target: el, enter: "bottom-=8% top", once: true }),
-      onComplete: () => {
-        el.dataset.shown = "true"
-      },
+  const singles = [...document.querySelectorAll(".reveal")].filter(
+    (el) => !el.classList.contains("section__head") && !el.closest(".rows, .cards"),
+  )
+  utils.set(singles, { opacity: 0 })
+  for (const el of singles) {
+    onVisible(el, () => {
+      animate(el, {
+        opacity: [0, 1],
+        y: [34, 0],
+        duration: 800,
+        ease: "outExpo",
+        onComplete: () => {
+          el.dataset.shown = "true"
+        },
+      })
     })
   }
 
-  for (const el of document.querySelectorAll(".section__head.reveal")) el.dataset.shown = "true"
+  // Safety net: nothing may stay invisible. Anything still hidden a moment after
+  // the page settles is shown outright, so a missed observer never hides content.
+  const sweep = () => {
+    for (const el of document.querySelectorAll(
+      ".section__head, .rows > *, .cards > *, .reveal, .section__head h2 span",
+    )) {
+      const cs = getComputedStyle(el)
+      const r = el.getBoundingClientRect()
+      const seen = r.top < window.innerHeight && r.bottom > 0
+      if (seen && Number(cs.opacity) < 0.05) utils.set(el, { opacity: 1, y: 0 })
+    }
+  }
+  window.addEventListener("scroll", () => setTimeout(sweep, 1200), { passive: true })
+  setTimeout(sweep, 2500)
 }
 
 /* ---------------------------------------------------------------- header */
@@ -216,9 +288,10 @@ function boot() {
   // Hide what is about to animate, in one frame, so nothing flashes before its
   // scroll observer fires. CSS keeps these visible when this never runs.
   utils.set(".story__scene + .story__scene", { opacity: 0 })
-  utils.set(".reveal, .rows > li, .cards > li", { opacity: 0 })
   utils.set(".story__photo, .story__glow, .story__progress", { opacity: 0 })
+  utils.set(".page-hero__glow, .page-hero .eyebrow, .page-lede", { opacity: 0 })
   heroIntro()
+  pageHero()
   pinnedStory()
   reveals()
 }

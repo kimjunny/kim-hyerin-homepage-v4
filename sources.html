@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#063171" />
-    <meta name="description" content="Publication and institutional links supporting the research and activities presented on Hye-Lin Kim's website." />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="description" content="Sources for the profile, research and activities presented on this website." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/src/styles/laboratory.css" />
+    <link rel="stylesheet" href="/src/styles/v3.css" />
     <title>Resources | Social Pharmacy Laboratory</title>
   </head>
   <body>
@@ -25,74 +25,112 @@
         <details class="mobile-menu">
           <summary>Menu</summary>
           <nav aria-label="Mobile navigation">
-          <a href="/index.html">Home</a>
-          <a href="/profile.html">Professor</a>
-          <a href="/research.html">Research</a>
-          <a href="/publications.html">Publications</a>
-          <a href="/education.html">Education</a>
-          <a href="/sources.html" aria-current="page">Resources</a>
+            <a href="/index.html" aria-current="page">Home</a>
+            <a href="/profile.html">Professor</a>
+            <a href="/research.html">Research</a>
+            <a href="/publications.html">Publications</a>
+            <a href="/education.html">Education</a>
+            <a href="/sources.html" aria-current="page">Resources</a>
           </nav>
         </details>
       </div>
     </header>
     <main id="main-content" tabindex="-1">
-      <header class="lab-banner lab-banner-inner">
-        <img class="campus-photo" src="/images/campus-1280.svg" srcset="/images/campus-640.svg 640w, /images/campus-1280.svg 1280w" sizes="100vw" width="1280" height="853" alt="" fetchpriority="high" decoding="async" />
-        <div class="shell"><h1>Resources</h1></div>
-      </header>
-      <div class="page-intro shell"><p class="page-summary">Profile and activity information is drawn from official university pages. Research summaries refer to journal articles, PubMed records, and DOI information.</p></div>
-      <div class="shell page-layout">
-        <aside class="page-sidebar" aria-label="Source guide">
-          <p class="eyebrow" lang="en">Source guide</p>
-          <nav class="section-nav" aria-label="Source section navigation"><a href="#papers">Selected publications</a><a href="#institutions">Institutional sources</a><a href="#figure-credits">Figures and terms of use</a></nav>
-          <p class="sidebar-note">Primary sources · Selected references</p>
-          <p class="sidebar-note">As of<br /><time datetime="2026-09-02">2026. 09. 02</time></p>
-        </aside>
-        <div class="page-content">
-          <section class="reading-block" aria-labelledby="guide-title">
+      <section class="page-hero">
+        <div class="page-hero__glow" aria-hidden="true"></div>
+        <div class="shell">
+          <span class="eyebrow">Resources</span>
+          <h1>Resources</h1>
+          <p class="page-lede">Profile and activity information is drawn from official university pages. Research summaries refer to journal articles, PubMed records, and DOI information.</p>
+        </div>
+      </section>
+      <nav class="page-nav" aria-label="On this page">
+        <div class="shell">
+          <ul>
+            <li><a href="#papers">Selected publications</a></li>
+            <li><a href="#institutions">Institutional sources</a></li>
+            <li><a href="#figure-credits">Figures and terms of use</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <section class="section" aria-labelledby="guide-title">
+        <div class="shell">
+          <div class="section__head reveal">
+            <span class="eyebrow">Source guide</span>
             <h2 id="guide-title">Supporting sources</h2>
+          </div>
+          <div class="prose reveal">
             <p>Academic rank and specialization are based on the university faculty directory. Study methods and results are based on journal articles and PubMed records. The linked Sahmyook University interview provides more detail on current research.</p>
             <p>The external publication and institutional links below open in a new window.</p>
-          </section>
-          <section class="reading-block" id="papers" aria-labelledby="papers-title">
-            <p class="eyebrow" lang="en">Papers</p>
+            <p class="sidebar-note">Primary sources · Selected references · As of <time datetime="2026-09-02">2026. 09. 02</time></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--wash" id="papers" aria-labelledby="papers-title">
+        <div class="shell">
+          <div class="section__head reveal">
+            <span class="eyebrow">Papers</span>
             <h2 id="papers-title">Selected publications</h2>
-            <ol class="source-ledger">
-              <li><span class="source-type">Article</span><div><a href="https://www.e-cmh.org/journal/view.php?doi=10.3350/cmh.2025.0796" target="_blank" rel="noreferrer">MASLD economic evaluation · Publisher full text</a><small><span lang="en">DOI 10.3350/cmh.2025.0796</span></small></div></li>
-              <li><span class="source-type">PubMed</span><div><a href="https://pubmed.ncbi.nlm.nih.gov/41183809/" target="_blank" rel="noreferrer">MASLD study citation and abstract</a><small><span lang="en">PMID 41183809</span></small></div></li>
-              <li><span class="source-type">Article</span><div><a href="https://doi.org/10.1136/gutjnl-2020-321309" target="_blank" rel="noreferrer">Chronic hepatitis B economic evaluation · DOI</a><small><span lang="en">10.1136/gutjnl-2020-321309</span></small></div></li>
-              <li><span class="source-type">PubMed</span><div><a href="https://pubmed.ncbi.nlm.nih.gov/33239344/" target="_blank" rel="noreferrer">Chronic hepatitis B study citation and abstract</a><small><span lang="en">PMID 33239344</span></small></div></li>
-            </ol>
-          </section>
-          <section class="reading-block" id="institutions" aria-labelledby="institutions-title">
-            <p class="eyebrow" lang="en">Institutional sources</p>
+          </div>
+          <ul class="rows">
+            <li><span class="row-key">Article</span><div><h3><a href="https://www.e-cmh.org/journal/view.php?doi=10.3350/cmh.2025.0796" target="_blank" rel="noreferrer">MASLD economic evaluation · Publisher full text</a></h3><p lang="en">DOI 10.3350/cmh.2025.0796</p></div></li>
+            <li><span class="row-key">PubMed</span><div><h3><a href="https://pubmed.ncbi.nlm.nih.gov/41183809/" target="_blank" rel="noreferrer">MASLD study citation and abstract</a></h3><p lang="en">PMID 41183809</p></div></li>
+            <li><span class="row-key">Article</span><div><h3><a href="https://doi.org/10.1136/gutjnl-2020-321309" target="_blank" rel="noreferrer">Chronic hepatitis B economic evaluation · DOI</a></h3><p lang="en">10.1136/gutjnl-2020-321309</p></div></li>
+            <li><span class="row-key">PubMed</span><div><h3><a href="https://pubmed.ncbi.nlm.nih.gov/33239344/" target="_blank" rel="noreferrer">Chronic hepatitis B study citation and abstract</a></h3><p lang="en">PMID 33239344</p></div></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="institutions" aria-labelledby="institutions-title">
+        <div class="shell">
+          <div class="section__head reveal">
+            <span class="eyebrow">Institutional sources</span>
             <h2 id="institutions-title">Institutional sources and researcher information</h2>
-            <ol class="source-ledger">
-              <li><span class="source-type">University</span><div><a href="https://www.syu.ac.kr/pharmacy/faculty/professor/" target="_blank" rel="noreferrer">College of Pharmacy faculty, Sahmyook University</a></div></li>
-              <li><span class="source-type">History</span><div><a href="https://www.syu.ac.kr/pharmacy/department/history/" target="_blank" rel="noreferrer">College of Pharmacy history, Sahmyook University</a></div></li>
-              <li><span class="source-type">Graduate school</span><div><a href="https://www.syu.ac.kr/pharmacy/undergraduate-information/graduate-school/laboratory-by-major/" target="_blank" rel="noreferrer">Graduate laboratories by specialization, College of Pharmacy</a></div></li>
-              <li><span class="source-type">ORCID</span><div><a href="https://orcid.org/0000-0001-9091-8787" target="_blank" rel="noreferrer">Hye-Lin Kim · Researcher identifier</a><small><span lang="en">0000-0001-9091-8787</span></small></div></li>
-              <li><span class="source-type">Interview</span><div><a href="https://www.syu.ac.kr/blog/%EA%B3%A0%EA%B0%80%EC%9D%98-%EC%A7%80%EB%B0%A9%EA%B0%84-%EC%8B%A0%EC%95%BD-%EB%8F%88%EA%B0%92-%ED%95%A0%EA%B9%8C-%EA%B9%80%ED%98%9C%EB%A6%B0-%EA%B5%90%EC%88%98-%EB%B9%84%EC%9A%A9/" target="_blank" rel="noreferrer">2026 Sahmyook University interview</a><small>High-cost new treatments for fatty liver disease and cost-effectiveness</small></div></li>
-              <li><span class="source-type">Education</span><div><a href="https://www.syu.ac.kr/pharmacy/2024/09/04/8785/" target="_blank" rel="noreferrer">Visits to advanced community pharmacy practice sites</a></div></li>
-              <li><span class="source-type">Center</span><div><a href="https://www.syu.ac.kr/rnd/research-academic-department/autonomous-research-institute/" target="_blank" rel="noreferrer">Official HOPE Center information</a></div></li>
-            </ol>
-          </section>
-          <section class="reading-block" id="figure-credits" aria-labelledby="credits-title">
-            <p class="eyebrow" lang="en">Figure credits</p>
+          </div>
+          <ul class="rows">
+            <li><span class="row-key">University</span><div><h3><a href="https://www.syu.ac.kr/pharmacy/faculty/professor/" target="_blank" rel="noreferrer">College of Pharmacy faculty, Sahmyook University</a></h3></div></li>
+            <li><span class="row-key">History</span><div><h3><a href="https://www.syu.ac.kr/pharmacy/department/history/" target="_blank" rel="noreferrer">College of Pharmacy history, Sahmyook University</a></h3></div></li>
+            <li><span class="row-key">Graduate school</span><div><h3><a href="https://www.syu.ac.kr/pharmacy/undergraduate-information/graduate-school/laboratory-by-major/" target="_blank" rel="noreferrer">Graduate laboratories by specialization, College of Pharmacy</a></h3></div></li>
+            <li><span class="row-key">ORCID</span><div><h3><a href="https://orcid.org/0000-0001-9091-8787" target="_blank" rel="noreferrer">Hye-Lin Kim · Researcher identifier</a></h3><p lang="en">0000-0001-9091-8787</p></div></li>
+            <li><span class="row-key">Interview</span><div><h3><a href="https://www.syu.ac.kr/blog/%EA%B3%A0%EA%B0%80%EC%9D%98-%EC%A7%80%EB%B0%A9%EA%B0%84-%EC%8B%A0%EC%95%BD-%EB%8F%88%EA%B0%92-%ED%95%A0%EA%B9%8C-%EA%B9%80%ED%98%9C%EB%A6%B0-%EA%B5%90%EC%88%98-%EB%B9%84%EC%9A%A9/" target="_blank" rel="noreferrer">2026 Sahmyook University interview</a></h3><p>High-cost new treatments for fatty liver disease and cost-effectiveness</p></div></li>
+            <li><span class="row-key">Education</span><div><h3><a href="https://www.syu.ac.kr/pharmacy/2024/09/04/8785/" target="_blank" rel="noreferrer">Visits to advanced community pharmacy practice sites</a></h3></div></li>
+            <li><span class="row-key">Center</span><div><h3><a href="https://www.syu.ac.kr/rnd/research-academic-department/autonomous-research-institute/" target="_blank" rel="noreferrer">Official HOPE Center information</a></h3></div></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section section--wash" id="figure-credits" aria-labelledby="credits-title">
+        <div class="shell">
+          <div class="section__head reveal">
+            <span class="eyebrow">Figure credits</span>
             <h2 id="credits-title">Figures and terms of use</h2>
+          </div>
+          <div class="prose reveal">
             <p>The MASLD study figures on the publications page are reproduced from the original article below. Figure 4 is the graphical abstract; Figures 1 to 3 show the Markov model and sensitivity analyses.</p>
             <p lang="en">Yoon EL et al. Evaluating treatment response thresholds for cost-effective treatment in metabolic dysfunction-associated steatotic liver disease. DOI 10.3350/cmh.2025.0796.</p>
             <p>The article and figures are covered by the <span lang="en">Creative Commons Attribution-NonCommercial 3.0 (CC BY-NC 3.0)</span> license. The figures have not been cropped or recolored. A link beside each figure opens the original.</p>
-            <div class="link-cluster"><a href="https://www.e-cmh.org/journal/view.php?doi=10.3350/cmh.2025.0796" target="_blank" rel="noreferrer">Article and original figures</a><a href="https://creativecommons.org/licenses/by-nc/3.0/" target="_blank" rel="noreferrer">CC BY-NC 3.0 license terms</a></div>
-          </section>
-          <section class="reading-block" id="campus-credits" aria-labelledby="campus-title">
-            <h2 id="campus-title">Campus photograph</h2>
-            <p>The page banners use a campus photograph from Sahmyook University's official website.</p>
-            <div class="link-cluster"><a href="https://www.syu.ac.kr/wp-content/uploads/2025/12/%EC%82%AC%EC%A7%842-%EC%82%BC%EC%9C%A1%EB%8C%80-%EC%A0%84%EA%B2%BD-scaled.jpg" target="_blank" rel="noreferrer">Original campus photograph</a><a href="https://www.syu.ac.kr/" target="_blank" rel="noreferrer">Sahmyook University</a></div>
-          </section>
-          <aside class="note"><p>This page collects sources for the selected research and activities presented on the website. Links and content are updated to reflect current information from the relevant institutions and scholarly databases.</p></aside>
+            <div class="link-row"><a href="https://www.e-cmh.org/journal/view.php?doi=10.3350/cmh.2025.0796" target="_blank" rel="noreferrer">Article and original figures</a><a href="https://creativecommons.org/licenses/by-nc/3.0/" target="_blank" rel="noreferrer">CC BY-NC 3.0 license terms</a></div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <section class="section" id="campus-credits" aria-labelledby="campus-title">
+        <div class="shell">
+          <div class="section__head reveal">
+            <span class="eyebrow">Photography</span>
+            <h2 id="campus-title">Campus photograph</h2>
+          </div>
+          <div class="prose reveal">
+            <p>The page banners use a campus photograph from Sahmyook University's official website.</p>
+            <div class="link-row"><a href="https://www.syu.ac.kr/wp-content/uploads/2025/12/%EC%82%AC%EC%A7%842-%EC%82%BC%EC%9C%A1%EB%8C%80-%EC%A0%84%EA%B2%BD-scaled.jpg" target="_blank" rel="noreferrer">Original campus photograph</a><a href="https://www.syu.ac.kr/" target="_blank" rel="noreferrer">Sahmyook University</a></div>
+          </div>
+          <aside class="note reveal">
+            <p>This page collects sources for the selected research and activities presented on the website. Links and content are updated to reflect current information from the relevant institutions and scholarly databases.</p>
+          </aside>
+        </div>
+      </section>
     </main>
     <footer class="site-footer">
       <div class="shell footer-inner">
@@ -101,5 +139,6 @@
         <p class="photo-credit">Campus photograph: <a href="https://www.syu.ac.kr/wp-content/uploads/2025/12/%EC%82%AC%EC%A7%842-%EC%82%BC%EC%9C%A1%EB%8C%80-%EC%A0%84%EA%B2%BD-scaled.jpg" target="_blank" rel="noreferrer">Sahmyook University</a></p>
       </div>
     </footer>
+    <script type="module" src="/src/motion/story.js"></script>
   </body>
 </html>
