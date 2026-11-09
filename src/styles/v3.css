@@ -230,20 +230,37 @@ main:focus {
   overflow: hidden;
 }
 
-/* Default (and no-JS) state: the first chapter is readable, the rest wait.
-   The motion module sets the hidden states itself once it boots, so a failed
-   script never leaves the page blank. */
+/* No-JS and reduced-motion default: chapters stack in normal flow and every
+   chapter is readable. Nothing is hidden by CSS alone. */
 .story__scene {
-  grid-area: 1 / 1;
   width: min(var(--shell), 100% - var(--gutter) * 2);
-  will-change: opacity, transform, filter;
+  margin-inline: auto;
 }
 
 .story__scene + .story__scene {
-  opacity: 0;
+  margin-block-start: 72px;
 }
 
-html[data-motion="static"] .story__scene + .story__scene {
+/* Motion path: chapters become full-stage layers. Only the chapter marked
+   active is painted; the module swaps that mark and runs a short handover
+   that always settles, so a stopped scroll never rests on blurred text. */
+html[data-motion="animated"] .story__stage {
+  display: block;
+}
+
+html[data-motion="animated"] .story__scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: min(var(--shell), 100% - var(--gutter) * 2);
+  margin-inline: auto;
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+html[data-motion="animated"] .story__scene[data-active="true"] {
   opacity: 1;
 }
 
@@ -312,14 +329,18 @@ html[data-motion="static"] .story__scene + .story__scene {
     padding-block: var(--section-space);
   }
 
-  .story__scene {
-    grid-area: auto;
+  html[data-motion] .story__scene {
+    position: static;
+    inset: auto;
+    display: block;
+    width: auto;
     opacity: 1;
     transform: none;
+    filter: none;
   }
 
-  .story__scene + .story__scene {
-    margin-top: 72px;
+  html[data-motion] .story__scene + .story__scene {
+    margin-block-start: 72px;
   }
 
   .story__progress {
