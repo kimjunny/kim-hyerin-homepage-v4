@@ -176,14 +176,16 @@ Violates: IMP-craft-floor.
 
 - **F4 (P2)** — 18 elements carried `will-change` at rest: 13 `.reveal` blocks kept a compositor layer for the whole session after their single entrance, plus the story photo, glow and three scenes. (impeccable #80, #83)
 
+- **F5 (P2)** — No spacing scale: 18 distinct raw px values across margin, padding and gap, with no 4-unit base. Tokenised to `--space-1..22`; the snap that would have broken a 44px touch target was rejected. (impeccable #36)
+
 ## Summary
 
 | Severity | Count |
 |---|---|
 | P0 | 3 |
 | P1 | 9 |
-| P2 | 17 |
-| **Total** | **30** |
+| P2 | 18 |
+| **Total** | **31** |
 
 Pages affected: index (A1, A6, A7, A8, A10, B3, C3, D1, D2, E2, E3), profile (A2, A3, A4, A5, C2, D2), research (A4, B1, B3, D1, D2), publications (A4, A7, B4, D1, D2, E2, E3), education (A4, A9, B2, B3, D2), sources (A4, A5, B3, B5, D2).
 

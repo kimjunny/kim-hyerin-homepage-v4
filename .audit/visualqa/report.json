@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T18:05:15.947Z",
+  "generatedAt": "2026-11-09T18:16:49.311Z",
   "baseUrl": "http://127.0.0.1:4319",
   "checks": [
     {
@@ -102,7 +102,7 @@
       "id": "VQ-05/index",
       "name": "첫 화면에 주 행동이 있다",
       "status": "PASS",
-      "detail": "[{\"text\":\"Read the research\",\"top\":744},{\"text\":\"Publications\",\"top\":744}]"
+      "detail": "[{\"text\":\"Read the research\",\"top\":742},{\"text\":\"Publications\",\"top\":742}]"
     },
     {
       "id": "VQ-07/index-mobile",
