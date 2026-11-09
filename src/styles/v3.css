@@ -177,6 +177,13 @@ a:hover {
   color: var(--blue);
 }
 
+/* Pressed state. Hover and focus were covered but a pointer press produced no
+   confirmation at all. The move is one pixel, inside the 100-150ms window for
+   immediate feedback, and it is small enough not to shift layout. */
+a:active {
+  color: var(--navy);
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -342,10 +349,18 @@ html[data-motion="animated"] .story__scene {
   width: min(var(--shell), 100% - var(--gutter) * 2);
   margin-inline: auto;
   opacity: 0;
+  /* Every chapter is a full-stage layer in the same inset. An inactive one is
+     invisible but still hit-testable, and because it comes later in the DOM it
+     sat on top of the live chapter: elementFromPoint over the hero CTA returned
+     chapter 3's layer, so the primary button could not be clicked at any scroll
+     position. Only pointer events are withdrawn here, not visibility, because
+     the crossfade needs the outgoing chapter painted while it fades. */
+  pointer-events: none;
 }
 
 html[data-motion="animated"] .story__scene[data-active="true"] {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .story__scene h1,
@@ -387,6 +402,21 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .button:hover {
   background: #dbe7f6;
+  /* Pin the label colour. Without this, `a:hover { color: var(--blue) }` (0,1,1)
+     outbids `.button` (0,1,0) and the label inherits the link blue. In light
+     that lands at 5.148:1, but in dark --blue is #7fb3ee against a pale fill and
+     measures 1.578:1, a straight WCAG failure on the primary CTA. */
+  color: var(--night);
+}
+
+.button:active {
+  background: #c7dbef;
+  color: var(--night);
+  transform: translateY(1px);
+}
+
+.button:active:not(:disabled) {
+  transition-duration: 80ms;
 }
 
 .button--ghost {
@@ -398,6 +428,13 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .button--ghost:hover {
   background: rgb(255 255 255 / 12%);
   border-color: #fff;
+  color: #fff;
+}
+
+.button--ghost:active {
+  background: rgb(255 255 255 / 22%);
+  color: #fff;
+  transform: translateY(1px);
 }
 
 /* Contact block on the profile page. */
@@ -534,6 +571,12 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
   .button:hover {
     background: #cfdcee;
+    color: #0b1220;
+  }
+  .button:active {
+    background: #b9cbe1;
+    color: #0b1220;
+    transform: translateY(1px);
   }
 
   .button--ghost {
@@ -544,6 +587,12 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
   .button--ghost:hover {
     background: rgb(255 255 255 / 12%);
+    color: #eef2f8;
+  }
+  .button--ghost:active {
+    background: rgb(255 255 255 / 22%);
+    color: #eef2f8;
+    transform: translateY(1px);
   }
 
   .note {

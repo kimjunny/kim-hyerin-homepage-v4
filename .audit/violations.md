@@ -173,19 +173,19 @@ Violates: IMP-craft-floor.
 - **F1 (P2)** — No browser-surface theming: `::selection`, `scrollbar-color`, `caret-color` and tabular figures were all unset, so selection fell back to the OS blue inside an authored dark surface. (impeccable #154)
 - **F2 (P2)** — No `text-wrap`: display headings could leave a single orphan word and prose wrapped greedily. On a 390px viewport the h2 "Evidence that reaches practice and policy." ended with an 82px last line. (impeccable #24)
 - **F3 (P1)** — No type scale: eight raw `font-size` declarations with no tokens, including 13.5px and 15.5px half-steps. Card summary copy sat at 15.5px, below the 16px mobile reading floor. (impeccable #91, #146)
-
 - **F4 (P2)** — 18 elements carried `will-change` at rest: 13 `.reveal` blocks kept a compositor layer for the whole session after their single entrance, plus the story photo, glow and three scenes. (impeccable #80, #83)
-
 - **F5 (P2)** — No spacing scale: 18 distinct raw px values across margin, padding and gap, with no 4-unit base. Tokenised to `--space-1..22`; the snap that would have broken a 44px touch target was rejected. (impeccable #36)
+- **F6 (P1)** — The primary CTA in the hero could not be clicked at any scroll position. In the animated story every chapter is an absolutely positioned full-stage layer, and an inactive chapter (`opacity:0`) still took pointer events. Because it comes later in the DOM it sat on top of the live chapter: `elementFromPoint` over "Read the research" returned chapter 3's layer at every scroll offset. Invisible layers now withdraw `pointer-events`; the crossfade is unaffected because `visibility` is left alone. (structural, blocks the only call to action above the fold)
+- **F7 (P2)** — No `:active` state on any control. Hover, focus and the reduced-motion path existed, but a pointer press produced no confirmation. Adding it exposed a contrast defect: with `a:hover{color:var(--blue)}` (0,1,1) outbidding `.button` (0,1,0), the label inherited the link blue. Light measured 5.148:1 but dark measured **1.578:1 on hover and 1.096:1 pressed**, both WCAG failures. Label colour is now pinned per state in both schemes; lowest measured state is 11.32:1. (impeccable #85)
 
 ## Summary
 
 | Severity | Count |
 |---|---|
 | P0 | 3 |
-| P1 | 9 |
-| P2 | 18 |
-| **Total** | **31** |
+| P1 | 11 |
+| P2 | 20 |
+| **Total** | **34** |
 
 Pages affected: index (A1, A6, A7, A8, A10, B3, C3, D1, D2, E2, E3), profile (A2, A3, A4, A5, C2, D2), research (A4, B1, B3, D1, D2), publications (A4, A7, B4, D1, D2, E2, E3), education (A4, A9, B2, B3, D2), sources (A4, A5, B3, B5, D2).
 

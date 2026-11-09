@@ -817,6 +817,109 @@ try {
       )
     }
 
+    // VQ-30 interactive labels keep their contrast through hover and press.
+    // A generic `a:hover` rule outranks a single-class button rule, so the
+    // primary CTA's label turned blue on a pale blue fill at 1.578:1. Colour
+    // must be pinned per state, not inherited from the link default.
+    {
+      // Both schemes. Colour is overridden inside the dark media query, so a
+      // light-only probe misses half the states; the first version of this
+      // check measured only the OS default and passed a build with the defect
+      // still present in light mode.
+      const schemes = ["light", "dark"]
+      const sampleByScheme = {}
+      let reachable = true
+      let statesDiffer = false
+      for (const scheme of schemes) {
+        const ctaPage = await browser.newPage()
+        await ctaPage.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
+        await ctaPage.emulateMediaFeatures([{ name: "prefers-color-scheme", value: scheme }])
+        await ctaPage.goto(`${BASE}/index.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        await ctaPage.evaluate(() => document.fonts.ready)
+        await new Promise((r) => setTimeout(r, 1200))
+
+        const probe = async (label) => {
+          const box = await ctaPage.evaluate((t) => {
+            const e = [...document.querySelectorAll("a.button, button")].find((x) =>
+              x.innerText.includes(t),
+            )
+            if (!e) return null
+            e.scrollIntoView({ block: "center", behavior: "instant" })
+            const r = e.getBoundingClientRect()
+            return { x: r.x, y: r.y, w: r.width, h: r.height }
+          }, label)
+          if (!box) return null
+          await new Promise((r) => setTimeout(r, 300))
+          const read = () =>
+            ctaPage.evaluate((t) => {
+              const e = [...document.querySelectorAll("a.button, button")].find((x) =>
+                x.innerText.includes(t),
+              )
+              const s = getComputedStyle(e)
+              return { color: s.color, bg: s.backgroundColor }
+            }, label)
+          // Confirm the point is really over the control; otherwise the state
+          // readback is meaningless and the check must not silently pass.
+          const hitOk = await ctaPage.evaluate(
+            (t, b) => {
+              const e = [...document.querySelectorAll("a.button, button")].find((x) =>
+                x.innerText.includes(t),
+              )
+              const hit = document.elementFromPoint(b.x + b.w / 2, b.y + b.h / 2)
+              return Boolean(hit && (hit === e || e.contains(hit)))
+            },
+            label,
+            box,
+          )
+          const rest = await read()
+          await ctaPage.mouse.move(box.x + box.w / 2, box.y + box.h / 2)
+          await new Promise((r) => setTimeout(r, 300))
+          const hover = await read()
+          await ctaPage.mouse.down()
+          await new Promise((r) => setTimeout(r, 400))
+          const pressed = await read()
+          await ctaPage.mouse.up()
+          await new Promise((r) => setTimeout(r, 250))
+          return { rest, hover, pressed, hitOk }
+        }
+        const s = await probe("Read the research")
+        await ctaPage.close()
+        sampleByScheme[scheme] = s
+        reachable = reachable && Boolean(s?.hitOk)
+        statesDiffer = statesDiffer || s.hover.bg !== s.rest.bg || s.hover.color !== s.rest.color
+      }
+      const worst = await page.evaluate((all) => {
+        const srgb = (v) => {
+          const x = v / 255
+          return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4
+        }
+        const lum = (c) => {
+          const p = c.match(/\d+/g).slice(0, 3).map(Number)
+          return 0.2126 * srgb(p[0]) + 0.7152 * srgb(p[1]) + 0.0722 * srgb(p[2])
+        }
+        const ratio = (a, b) => {
+          const l1 = lum(a)
+          const l2 = lum(b)
+          return +((Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)).toFixed(2)
+        }
+        const rows = []
+        for (const [scheme, s] of Object.entries(all)) {
+          for (const k of ["rest", "hover", "pressed"]) {
+            rows.push({ scheme, state: k, ratio: ratio(s[k].color, s[k].bg) })
+          }
+        }
+        return rows
+      }, sampleByScheme)
+      const floor = reachable && statesDiffer && worst.every((w) => w.ratio >= 4.5)
+      const lowest = worst.reduce((a, b) => (a.ratio <= b.ratio ? a : b))
+      add(
+        "VQ-30/index",
+        "누름·호버 상태에서도 라벨 대비가 4.5:1 이상",
+        floor ? "PASS" : "FAIL",
+        `reachable=${reachable} statesDiffer=${statesDiffer} lowest=${lowest.scheme}/${lowest.state}=${lowest.ratio}:1`,
+      )
+    }
+
     await page.close()
   }
 
