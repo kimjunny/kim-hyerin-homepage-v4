@@ -323,7 +323,6 @@ html[data-motion="animated"] .story__scene {
   width: min(var(--shell), 100% - var(--gutter) * 2);
   margin-inline: auto;
   opacity: 0;
-  will-change: opacity, transform, filter;
 }
 
 html[data-motion="animated"] .story__scene[data-active="true"] {
@@ -449,7 +448,6 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   object-fit: cover;
   object-position: center 45%;
   opacity: 0.3;
-  will-change: transform;
 }
 
 .story__glow {
@@ -462,7 +460,6 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   border-radius: 50%;
   background: radial-gradient(circle, rgb(18 95 172 / 55%) 0%, rgb(11 18 32 / 0%) 62%);
   translate: -50% -50%;
-  will-change: transform;
 }
 
 .story__progress {
@@ -573,9 +570,13 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 /* --------------------------------------------------------------- reveals */
 
 /* Reveals are driven by the motion module, which hides them itself at boot.
-   Without JavaScript, or under reduced motion, they simply stay visible. */
+   Without JavaScript, or under reduced motion, they simply stay visible.
+   will-change is deliberately NOT set here: it belongs to the moment the
+   animation runs, and the module releases it on completion. Pinning it in the
+   stylesheet kept a compositor layer alive on every block for the whole
+   session. */
 .reveal {
-  will-change: opacity, transform;
+  /* no will-change at rest */
 }
 
 /* -------------------------------------------------------------- sections */

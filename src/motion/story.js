@@ -110,6 +110,21 @@ function pinnedStory() {
   const DURATION = 620
   const HANDOVER = `opacity ${DURATION}ms ${EASE}, filter ${DURATION}ms ${EASE}, transform ${DURATION}ms ${EASE}`
 
+  // A compositor hint is only worth its memory while the story is actually being
+  // scrubbed. Outside the track the layers are released, so a reader far down
+  // the page is not paying for five promoted layers behind them.
+  const hinted = story.querySelectorAll(".story__photo, .story__glow, .story__scene")
+  const hint = (on) => {
+    for (const el of hinted) el.style.willChange = on ? "transform, opacity" : "auto"
+  }
+  hint(false)
+  new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) hint(entry.isIntersecting)
+    },
+    { rootMargin: "200px 0px" },
+  ).observe(story)
+
   let lead = -1
 
   // The handover is a CSS transition, not a scrub. A transition always reaches
@@ -255,6 +270,10 @@ function reveals() {
         ease: "outExpo",
         onComplete: () => {
           el.dataset.shown = "true"
+          // will-change is a hint for a known animation. Leaving it on every
+          // revealed block keeps a compositor layer alive for the rest of the
+          // session, so it is released the moment the animation ends.
+          el.style.willChange = "auto"
         },
       })
     })
@@ -270,6 +289,10 @@ function reveals() {
       const r = el.getBoundingClientRect()
       const seen = r.top < window.innerHeight && r.bottom > 0
       if (seen && Number(cs.opacity) < 0.05) utils.set(el, { opacity: 1, y: 0 })
+      // The safety net may be the only thing that ever reveals this element, so
+      // it releases the will-change hint too. Leaving it set keeps a layer alive
+      // for elements the observer never touched.
+      if (Number(getComputedStyle(el).opacity) > 0.95) el.style.willChange = "auto"
     }
   }
   window.addEventListener("scroll", () => setTimeout(sweep, 1200), { passive: true })
