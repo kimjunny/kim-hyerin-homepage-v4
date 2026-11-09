@@ -270,6 +270,81 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   color: #fff;
 }
 
+/* Primary and secondary action for the opening chapter. The hero previously
+   offered no next step at all; these are the two destinations a visitor arrives
+   for (what the lab studies, and what it has published). */
+.story__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--night);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 180ms var(--ease-out),
+    color 180ms var(--ease-out),
+    border-color 180ms var(--ease-out);
+}
+
+.button:hover {
+  background: #dbe7f6;
+}
+
+.button--ghost {
+  background: transparent;
+  border-color: rgb(255 255 255 / 45%);
+  color: #fff;
+}
+
+.button--ghost:hover {
+  background: rgb(255 255 255 / 12%);
+  border-color: #fff;
+}
+
+/* Contact block on the profile page. */
+.contact-list {
+  display: grid;
+  gap: 10px;
+  margin: 26px 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding-block: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.contact-list__label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.footer-updated {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .story__scene p {
   max-width: 46ch;
   margin-top: 22px;
@@ -584,7 +659,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .page-hero {
   position: relative;
-  padding-block: clamp(116px, 16vh, 196px) clamp(48px, 7vw, 88px);
+  padding-block: clamp(88px, 11vh, 148px) clamp(44px, 6vw, 80px);
   background: var(--night);
   color: #fff;
   overflow: hidden;
