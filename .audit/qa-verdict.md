@@ -23,7 +23,7 @@ Every row below records a measurement taken in this session, not an intention.
 | VQ-11 | Reduced-motion path | scenes stacked, all readable | 3 scenes op=1 blur=none, tops 225/843/1241, overlap=false, stage 1602px | **PASS** |
 | VQ-12 | Sticky offset | target not under header | `#main-content` top = 69px = header height; scroll-padding 140px | **PASS** |
 | VQ-13 | Touch targets | >= 44px | 0 elements under 44px on 6/6 pages at 390 | **PASS** |
-| VQ-14 | Contrast | body >= 4.5, large >= 3, both schemes | light 0 failures, dark 0 failures (was 3.13:1 on `.footer-updated`; fixed to 7.9:1) | **PASS** |
+| VQ-14 | Contrast | body >= 4.5, large >= 3, both schemes | light 0 failures, dark 0 failures (was 3.13:1 on `.footer-updated`; fixed to 10.96:1) | **PASS** |
 | VQ-15 | Dark mode renders | dark paper, legible, no light band | `--paper #0b1220`, `--ink #eef2f8`, 0 unintended light backgrounds | **PASS** |
 | VQ-16 | Images local and complete | 0 e-cmh.org requests, naturalWidth > 0 | 0 external requests; 4/4 images naturalWidth=900 complete | **PASS** |
 | VQ-17 | Social preview | og:image + twitter:card + canonical | 6/6 pages, 4 og tags each, distinct canonical per page | **PASS** |
@@ -82,8 +82,12 @@ Two regressions surfaced only when the whole suite ran against merged `main`:
 - `.footer-updated` ("Last updated 2026. 11. 09") used `--muted`, a token tuned
   for the light paper. On the night footer that measured **3.13:1** at 13px,
   below the 4.5:1 floor. Changed to `rgb(255 255 255 / 76%)` over `--night`,
-  which measures **7.9:1**. Re-ran VQ-14 on all six pages in both schemes:
+  which measures **10.96:1**. Re-ran VQ-14 on all six pages in both schemes:
   0 failures. Commit `fix(footer): 밝은 배경용 muted 색이 어두운 푸터에서 3.13:1이던 것을 고친다`.
+  Both states are captured in `.audit/shots/footer/{before,after}.png`; the
+  script reproduces 3.13:1 exactly by re-applying `--muted` under a pinned
+  light scheme (under dark scheme `--muted` is `#a7b2c3` and the bug does not
+  reproduce).
 
 - The reduced-motion hero photo disappeared entirely. `.story__stage` switches
   from `position: sticky` to `static` on the reduced-motion path, which removed
