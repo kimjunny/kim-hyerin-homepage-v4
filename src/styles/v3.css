@@ -361,7 +361,9 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .footer-updated {
   margin-top: 18px;
-  color: var(--muted);
+  /* --muted is tuned for the light paper; on the night footer it lands at
+     3.13:1. 76% white over --night measures 7.9:1. */
+  color: rgb(255 255 255 / 76%);
   font-size: 13px;
 }
 
