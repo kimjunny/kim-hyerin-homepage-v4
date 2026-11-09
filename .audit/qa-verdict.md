@@ -1,16 +1,16 @@
 # QA Verdict — kim-hyerin-homepage-v4
 
-Run: 2026-11-09 · merged `main` @ `3a0e171` · preview `http://127.0.0.1:4319`
-Viewports: 1440x900 DPR 1 and 390x844 DPR 3 · schemes light + dark
-Method: Bun.WebView (Chromium) + CDP `Emulation.setEmulatedMedia` / `setDeviceMetricsOverride`.
-External tools: axe-core 4.14.0 (`scripts/a11y-gate.mjs`), Lighthouse 13.6.0 (`scripts/`).
-Every row below records a measurement taken in this session, not an intention.
+Run: 2026-11-09 · merged `main` @ `93ccb93` · preview `http://127.0.0.1:4319`
+Viewports: 1440x900 DPR 1 and 390x844 DPR 2 · schemes light + dark
+Method: puppeteer-core driving Chrome (`scripts/visual-gate.mjs`, `scripts/a11y-gate.mjs`).
+External tools: axe-core 4.14.0 (`scripts/a11y-gate.mjs`), Lighthouse 13.6.0 (CLI).
+Every row below is asserted by the gate; a row that is not automated says so.
 
 ## Verdict table
 
 | # | Scenario | Criterion | Measured | Verdict |
 |---|---|---|---|---|
-| VQ-01 | One H1, subject named | exactly 1 `<h1>`; profile H1 = name | 6/6 pages 1 H1; profile "Hye-Lin Kim" | **PASS** |
+| VQ-01 | One H1, subject named | exactly 1 `<h1>`; profile H1 = name | 6/6 pages 1 H1; profile H1 starts with "Hye-Lin Kim" | **PASS** |
 | VQ-02 | No duplicated sentence | no sentence >= 40ch twice | 0 duplicates on 6/6 pages | **PASS** |
 | VQ-03 | Eyebrow != H1 | not equal, not contained | 6/6 differ (Notice / Principal investigator / Four areas / Selected works / Teaching / Provenance) | **PASS** |
 | VQ-04 | Contact reachable | `mailto:` in footer | 6/6 pages, 1–3 mailto each | **PASS** |
@@ -27,15 +27,15 @@ Every row below records a measurement taken in this session, not an intention.
 | VQ-15 | Dark mode renders | dark paper, legible, no light band | `--paper #0b1220`, `--ink #eef2f8`, 0 unintended light backgrounds | **PASS** |
 | VQ-16 | Images local and complete | 0 e-cmh.org requests, naturalWidth > 0 | 0 external requests; 4/4 images naturalWidth=900 complete | **PASS** |
 | VQ-17 | Social preview | og:image + twitter:card + canonical | 6/6 pages, 4 og tags each, distinct canonical per page | **PASS** |
-| VQ-18 | Date format | one notation, valid datetime | dotted notation only; every `<time>` parses | **PASS** |
+| VQ-18 | Date format | one notation family, valid datetime | 20 `<time>` elements, dotted only; precision varies (year / year-month / year-month-day) by design | **PASS** |
 | VQ-19 | No horizontal scroll | scrollWidth == clientWidth | 0 overflow at 390 and 1440 on 6/6 | **PASS** |
 | VQ-20 | Build and lint | exit 0 both | `bun run build` 0, `bun run check` 0 | **PASS** |
-| VQ-21 | Keyboard focus visible | >= 2px ring | `solid 2px rgb(127,179,238)` | **PASS** |
+| VQ-21 | Keyboard focus visible | >= 2px ring on real Tab presses | 22 distinct tab stops, every one `solid 2px rgb(127,179,238)` | **PASS** |
 | VQ-22 | Landmarks and skip link | header/nav/main/footer, skip first | a.skip-link -> header.site-header -> main#main-content -> footer.site-footer | **PASS** |
-| VQ-23 | Before/after pair | one capture each per fixed violation | `.audit/shots/{motion,identity,layout,assets,vq24}/{before,after}` | **PASS** |
+| VQ-23 | Before/after pair | at least one identical-viewport pair per lane | 5 lanes covered: motion (2 pairs), identity (4), layout (5), assets (1), vq24 (1), footer (1). Per-violation pairs are **not** complete; see the limitation below | **PARTIAL** |
 | VQ-24 | Reduced-motion hero photo | photo paints on the static path | before: `paints=false`; after: `paints=true`, opacity 0.3 | **PASS** |
 
-**24 / 24 PASS** on the automated gate (`node scripts/visual-gate.mjs`, 16/16 assertions across both schemes and viewports), plus the manual rows above.
+**23 / 24 PASS, 1 PARTIAL** on the automated gate (`node scripts/visual-gate.mjs`, 30/30 assertions across both schemes and viewports).
 
 ## External tool evidence
 
@@ -143,6 +143,11 @@ Two regressions surfaced only when the whole suite ran against merged `main`:
 
 ## Known gaps
 
+- **VQ-23 is PARTIAL, not PASS.** 26 violations were fixed, but the capture
+  pairs are per lane (motion 2, identity 4, layout 5, assets 1, vq24 1,
+  footer 1), not one pair per violation. Several fixes are structural and have
+  no meaningful before frame (A4 eyebrow wording, D1 scroll-padding, E3 URL
+  shape). Each PR body carries the pairs that exist for its lane.
 - `.audit/impeccable-checklist.md` holds 115 of the 165 checklist items
   (items 51-165). Items 1-50 were produced by the research pass but the
   transcript that carried them was truncated by the 30k-character capture cap
@@ -162,9 +167,10 @@ Two regressions surfaced only when the whole suite ran against merged `main`:
 bun run build
 bun run preview --port 4319        # separate terminal
 bun run qa:a11y                    # axe, 12 runs, control-verified
-bun run qa:visual                  # VQ-06/10/11/12/14/15/19/20/24
+bun run qa:visual                  # 30 assertions: VQ-01..22, 24 (incl. both schemes)
 bun run qa:shots                   # 12 full-page captures at 1440 and 390
 node scripts/capture-live.mjs      # deployed v3 baseline captures
+node scripts/capture-footer.mjs before|after <out.png>
 ```
 
 Each script exits non-zero on failure, so they work as CI gates as written.
@@ -180,6 +186,7 @@ Live captures (all committed):
 - `.audit/shots/layout/{before,after}`
 - `.audit/shots/assets/{before,after}`
 - `.audit/shots/vq24/{before,after}` — reduced-motion hero regression
+- `.audit/shots/footer/{before,after}.png` — footer contrast 3.13:1 -> 10.96:1
 - `.audit/shots/fullpage/*.webp` — 12 full-page captures (6 pages x 2 viewports)
   with `capture-manifest.json`
 - `.audit/axe/axe-report.json` — axe run incl. control verification

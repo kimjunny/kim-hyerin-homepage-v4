@@ -154,7 +154,7 @@ Violates: HIG-58, FE-G4, FE-V6.
 ## E. Craft floor / AI slop
 
 ### E1 · P2 · No favicon/OG image, so link previews are blank
-(merged into D3.)
+(merged into D3, counted once there; excluded from the 26 total below.)
 
 ### E2 · P2 · External images hotlinked from the publisher (1.27 MB, 4 requests)
 All four publication figures load from `https://www.e-cmh.org/upload//thumbnails/…` with a double slash in the path. The site depends on a third party that can move or block them; three of four did not render during a 2.5s capture.
@@ -174,8 +174,8 @@ Violates: IMP-craft-floor.
 |---|---|
 | P0 | 3 |
 | P1 | 9 |
-| P2 | 11 |
-| **Total** | **23** |
+| P2 | 14 |
+| **Total** | **26** |
 
 Pages affected: index (A1, A6, A7, A8, A10, B3, C3, D1, D2, E2, E3), profile (A2, A3, A4, A5, C2, D2), research (A4, B1, B3, D1, D2), publications (A4, A7, B4, D1, D2, E2, E3), education (A4, A9, B2, B3, D2), sources (A4, A5, B3, B5, D2).
 
