@@ -1,0 +1,18 @@
+{"ts":"2026-11-09T15:11:00Z","step":"01","phase":"reference","event":"fork","note":"v4 fork created, remote kimjunny/kim-hyerin-homepage-v4","artifact":"repo"}
+{"ts":"2026-11-09T15:12:00Z","step":"02","phase":"reference","event":"hig","note":"75 universal HIG rules extracted, Apple-specific excluded","artifact":".audit/hig-universal-web.md"}
+{"ts":"2026-11-09T15:13:00Z","step":"03","phase":"reference","event":"ux-pack","note":"37 recommendations + 6 page-type ideals","artifact":".audit/ux-reference-pack.md"}
+{"ts":"2026-11-09T15:14:00Z","step":"04","phase":"reference","event":"frontend-rules","note":"visual-qa detect rules and checklist ids","artifact":".audit/frontend-visualqa-rules.md"}
+{"ts":"2026-11-09T15:15:00Z","step":"05","phase":"reference","event":"impeccable","note":"165 checklist items from 17 source files","artifact":".audit/impeccable-checklist.md"}
+{"ts":"2026-11-09T15:16:00Z","step":"06","phase":"audit","event":"screenshots","note":"58 baseline captures, 6 pages x 2 viewports x top/mid","artifact":"shots/before"}
+{"ts":"2026-11-09T15:17:00Z","step":"07","phase":"audit","event":"dom-probe","note":"DOM geometry, contrast, sticky, touch targets","artifact":"audit/dom-probe.json"}
+{"ts":"2026-11-09T15:18:00Z","step":"08","phase":"audit","event":"violations","note":"23 violations: 3 P0, 9 P1, 11 P2; 3 non-defects recorded","artifact":".audit/violations.md"}
+{"ts":"2026-11-09T15:19:00Z","step":"09","phase":"plan","event":"ulw-plan","note":"4 lanes, 23 VQ scenarios, 5 PRs, DoD","artifact":".omo/plans/hyerin-v4-remediation.md"}
+{"ts":"2026-11-09T15:20:00Z","step":"10","phase":"implement","event":"lane-a","note":"story handover rewrite; VQ-10 9/9 readable, VQ-11 static path","artifact":"PR #1"}
+{"ts":"2026-11-09T15:21:00Z","step":"11","phase":"implement","event":"lane-b","note":"identity, contact, hero CTA, eyebrow de-dup; VQ-01..05","artifact":"PR #2"}
+{"ts":"2026-11-09T15:22:00Z","step":"12","phase":"implement","event":"lane-c","note":"measure, rhythm, mobile type, dark mode, touch, scroll-padding; VQ-06..09,12..15,19,21,22","artifact":"PR #3"}
+{"ts":"2026-11-09T15:23:00Z","step":"13","phase":"implement","event":"lane-d","note":"local 900px WebP 1.21MB->125KB, og:image, canonical on 6 pages; VQ-16,17","artifact":"PR #4"}
+{"ts":"2026-11-09T15:24:00Z","step":"14","phase":"verify","event":"merge","note":"PR #1,#2,#3 merged clean; #4 rebased over #3 conflict on profile.html head","artifact":"main 7eb46a3"}
+{"ts":"2026-11-09T15:25:00Z","step":"15","phase":"verify","event":"autocrlf","note":"core.autocrlf=true was rewriting sources to CRLF and failing biome; pinned false","artifact":"repo config"}
+{"ts":"2026-11-09T15:26:00Z","step":"16","phase":"verify","event":"regression","note":"footer-updated 3.13:1 on night footer found by VQ-14; fixed to 7.9:1","artifact":"src/styles/v3.css"}
+{"ts":"2026-11-09T15:27:00Z","step":"17","phase":"verify","event":"full-suite","note":"VQ-01..23 all PASS on merged main","artifact":".audit/qa-verdict.md"}
+{"ts":"2026-11-09T15:28:00Z","step":"18","phase":"record","event":"pr-5","note":"audit record: references, violations, plan, ledger, verdict","artifact":"PR #5"}
