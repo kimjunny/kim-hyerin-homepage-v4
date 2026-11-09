@@ -2,6 +2,37 @@
    Editorial academic surface with a scroll-driven story.
    Motion values live in src/motion/story.js; this file owns the resting design. */
 
+/* Browser surfaces are part of the palette: selection, scrollbar, caret, and
+   tabular figures for dates. Without these the page falls back to the OS
+   default blue and proportional digits inside an otherwise authored surface. */
+::selection {
+  /* Both tokens flip with the scheme, which made the selection read as navy
+     on navy. Selection is an opaque highlight: pin it to the night surface and
+     the light ink so it holds in either scheme. */
+  background: #063171;
+  color: #eef2f8;
+}
+
+html {
+  scrollbar-color: var(--line) var(--paper);
+  caret-color: var(--blue);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    scrollbar-color: rgb(255 255 255 / 22%) var(--paper);
+  }
+}
+
+/* Aligned digits wherever dates and quantities are compared down a column. */
+time,
+.footer-updated,
+.meta,
+.row-key,
+.disclosure summary {
+  font-variant-numeric: tabular-nums;
+}
+
 :root {
   color-scheme: light;
 
@@ -27,6 +58,16 @@
   --display: clamp(40px, 7vw, 80px);
   --headline: clamp(28px, 3.6vw, 48px);
   --title: clamp(20px, 1.9vw, 26px);
+  /* Type scale. Every font-size in this file resolves to one of these, so a
+     label cannot drift to 13.5px or a card to 15.5px by accident. */
+  --text-caption: 13px;
+  --text-small: 14px;
+  --text-compact: 15px;
+  /* Reading copy floor: 16px keeps iOS Safari from force-zooming and matches
+     the mobile body minimum. */
+  --text-lede: 16px;
+  --text-body: 17px;
+  --text-subhead: 19px;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -66,6 +107,8 @@ h3 {
   letter-spacing: -0.03em;
   line-height: 1.08;
   overflow-wrap: break-word;
+  /* Break display lines between phrases instead of leaving one orphan word. */
+  text-wrap: balance;
 }
 
 h1 {
@@ -86,6 +129,8 @@ p,
 li,
 dd {
   overflow-wrap: break-word;
+  /* Greedy wrapping leaves short last lines; pretty rebalances the final two. */
+  text-wrap: pretty;
 }
 
 p + p {
@@ -142,7 +187,7 @@ main:focus {
   border-radius: 8px;
   background: var(--ink);
   color: #fff;
-  font-size: 14px;
+  font-size: var(--text-small);
   text-decoration: none;
   transform: translateY(-200%);
 }
@@ -157,7 +202,7 @@ main:focus {
   /* --blue on white measured 2.19:1 at 13px. --navy clears 4.5:1 while
      staying inside the same two-hue palette. */
   color: var(--navy);
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -192,7 +237,7 @@ main:focus {
 }
 
 .brand {
-  font-size: 17px;
+  font-size: var(--text-body);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--ink);
@@ -209,7 +254,7 @@ main:focus {
   align-items: center;
   min-height: 44px;
   color: var(--muted);
-  font-size: 15px;
+  font-size: var(--text-compact);
   text-decoration: none;
   transition: color 0.2s var(--ease-out);
 }
@@ -313,7 +358,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   border-radius: 999px;
   background: #fff;
   color: var(--night);
-  font-size: 15px;
+  font-size: var(--text-compact);
   font-weight: 600;
   text-decoration: none;
   transition:
@@ -357,7 +402,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .contact-list__label {
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -368,7 +413,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   /* --muted is tuned for the light paper; on the night footer it lands at
      3.13:1. 76% white over --night measures 10.96:1. */
   color: rgb(255 255 255 / 76%);
-  font-size: 13px;
+  font-size: var(--text-caption);
 }
 
 .story__scene p {
@@ -585,7 +630,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .rows .row-key {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--text-small);
   font-weight: 600;
   letter-spacing: 0.04em;
 }
@@ -634,7 +679,10 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .card p {
   color: var(--muted);
-  font-size: 15.5px;
+  /* Was 15.5px, and the token pass briefly made it 15px. These cards carry the
+     page's summary copy, so they follow the body floor instead of the
+     compact chrome scale. */
+  font-size: var(--text-lede);
 }
 
 .card a {
@@ -651,7 +699,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   flex-wrap: wrap;
   gap: 12px 28px;
   margin-top: 28px;
-  font-size: 15.5px;
+  font-size: var(--text-compact);
 }
 
 .link-row a {
@@ -667,7 +715,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   padding-block: clamp(56px, 7vw, 88px);
   background: var(--night);
   color: rgb(255 255 255 / 76%);
-  font-size: 15px;
+  font-size: var(--text-compact);
 }
 
 .footer-inner {
@@ -681,7 +729,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   display: block;
   margin-bottom: 10px;
   color: #fff;
-  font-size: 19px;
+  font-size: var(--text-subhead);
   letter-spacing: -0.02em;
 }
 
@@ -709,7 +757,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   padding-top: 24px;
   border-top: 1px solid rgb(255 255 255 / 16%);
   color: rgb(255 255 255 / 60%);
-  font-size: 13px;
+  font-size: var(--text-caption);
 }
 
 .photo-credit a {
@@ -734,7 +782,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
     padding-inline: 14px;
     border: 1px solid var(--line);
     border-radius: 10px;
-    font-size: 15px;
+    font-size: var(--text-compact);
     cursor: pointer;
     list-style: none;
   }
@@ -853,7 +901,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .facts dt {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--text-small);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -901,7 +949,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .figure figcaption {
   margin-top: 12px;
   color: var(--muted);
-  font-size: 13.5px;
+  font-size: var(--text-caption);
   line-height: 1.6;
 }
 
@@ -953,7 +1001,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   align-items: center;
   min-height: 52px;
   color: var(--muted);
-  font-size: 15px;
+  font-size: var(--text-compact);
   font-weight: 600;
   text-decoration: none;
 }

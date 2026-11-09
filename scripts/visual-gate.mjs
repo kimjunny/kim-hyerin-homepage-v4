@@ -704,6 +704,90 @@ try {
       )
     }
 
+    // VQ-25 browser surfaces: selection, caret, scrollbar and tabular figures
+    // are themed from the palette instead of falling back to OS defaults.
+    {
+      const r = await page.evaluate(() => {
+        const rules = [...document.styleSheets]
+          .flatMap((s) => {
+            try {
+              return [...s.cssRules]
+            } catch {
+              return []
+            }
+          })
+          .map((x) => x.cssText)
+        const has = (re) => rules.some((t) => re.test(t))
+        const time = document.querySelector("time")
+        return {
+          selection: has(/::selection/),
+          scrollbar: has(/scrollbar-color/),
+          caret: has(/caret-color/),
+          tabular: time ? getComputedStyle(time).fontVariantNumeric : "no-time",
+        }
+      })
+      const ok = r.selection && r.scrollbar && r.caret && r.tabular === "tabular-nums"
+      add(
+        "VQ-25/index",
+        "브라우저 표면(선택·스크롤바·캐럿·표 숫자)이 팔레트를 따른다",
+        ok ? "PASS" : "FAIL",
+        JSON.stringify(r),
+      )
+    }
+
+    // VQ-26 wrapping: headings balance their lines and prose uses pretty
+    // wrapping, so display type does not leave a single orphan word.
+    {
+      const r = await page.evaluate(() => {
+        const h = document.querySelector("h2")
+        const p = document.querySelector("main p")
+        const cs = (el) => (el ? getComputedStyle(el) : null)
+        const read = (el) => {
+          const s = cs(el)
+          return s ? s.textWrap || s.textWrapMode || "none" : "missing"
+        }
+        return { heading: read(h), prose: read(p) }
+      })
+      const ok = r.heading === "balance" && r.prose === "pretty"
+      add(
+        "VQ-26/publications",
+        "제목은 balance, 본문은 pretty로 줄바꿈된다",
+        ok ? "PASS" : "FAIL",
+        JSON.stringify(r),
+      )
+    }
+
+    // VQ-27 reading floor: every prose paragraph, list item and definition on
+    // every page stays at or above 16px, so iOS Safari cannot force-zoom and
+    // the mobile body minimum holds. Captions and chrome may go lower.
+    {
+      const r = await page.evaluate(() => {
+        const offenders = [...document.querySelectorAll("main p, main li, main dd")]
+          .filter((e) => e.getClientRects().length > 0)
+          .map((e) => ({
+            px: parseFloat(getComputedStyle(e).fontSize),
+            txt: e.innerText.trim().slice(0, 30),
+          }))
+          .filter((x) => x.px < 16)
+        const sizes = [
+          ...new Set(
+            [...document.querySelectorAll("*")].map((e) =>
+              parseFloat(getComputedStyle(e).fontSize),
+            ),
+          ),
+        ]
+          .filter((n) => n > 0)
+          .sort((a, b) => a - b)
+        return { offenders: offenders.slice(0, 5), count: offenders.length, sizes }
+      })
+      add(
+        "VQ-27/prose",
+        "본문 텍스트가 16px 하한을 지킨다",
+        r.count === 0 ? "PASS" : "FAIL",
+        `${r.count} offender(s) ${JSON.stringify(r.offenders)}`,
+      )
+    }
+
     await page.close()
   }
 
