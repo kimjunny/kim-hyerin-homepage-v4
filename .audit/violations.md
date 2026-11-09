@@ -168,14 +168,20 @@ Violates: IMP-craft-floor.
 
 ---
 
+## F. Surface & type system (second pass, impeccable items 1-50 restored)
+
+- **F1 (P2)** — No browser-surface theming: `::selection`, `scrollbar-color`, `caret-color` and tabular figures were all unset, so selection fell back to the OS blue inside an authored dark surface. (impeccable #154)
+- **F2 (P2)** — No `text-wrap`: display headings could leave a single orphan word and prose wrapped greedily. On a 390px viewport the h2 "Evidence that reaches practice and policy." ended with an 82px last line. (impeccable #24)
+- **F3 (P1)** — No type scale: eight raw `font-size` declarations with no tokens, including 13.5px and 15.5px half-steps. Card summary copy sat at 15.5px, below the 16px mobile reading floor. (impeccable #91, #146)
+
 ## Summary
 
 | Severity | Count |
 |---|---|
 | P0 | 3 |
 | P1 | 9 |
-| P2 | 14 |
-| **Total** | **26** |
+| P2 | 16 |
+| **Total** | **29** |
 
 Pages affected: index (A1, A6, A7, A8, A10, B3, C3, D1, D2, E2, E3), profile (A2, A3, A4, A5, C2, D2), research (A4, B1, B3, D1, D2), publications (A4, A7, B4, D1, D2, E2, E3), education (A4, A9, B2, B3, D2), sources (A4, A5, B3, B5, D2).
 

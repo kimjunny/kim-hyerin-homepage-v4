@@ -34,6 +34,9 @@ Every row below is asserted by the gate; a row that is not automated says so.
 | VQ-22 | Landmarks and skip link | header/nav/main/footer, skip first | a.skip-link -> header.site-header -> main#main-content -> footer.site-footer | **PASS** |
 | VQ-23 | Before/after pair | at least one identical-viewport pair per lane | 5 lanes covered: motion (2 pairs), identity (4), layout (5), assets (1), vq24 (1), footer (1). Per-violation pairs are **not** complete; see the limitation below | **PARTIAL** |
 | VQ-24 | Reduced-motion hero photo | photo paints on the static path | before: `paints=false`; after: `paints=true`, opacity 0.3 | **PASS** |
+| VQ-25 | Browser surfaces themed | selection, scrollbar, caret, tabular figures | `::selection` navy on light ink, `scrollbar-color`, `caret-color`, `time{font-variant-numeric:tabular-nums}` | **PASS** |
+| VQ-26 | Line breaking | headings balance, prose pretty | `h1,h2,h3{text-wrap:balance}`, `p,li,dd{text-wrap:pretty}`. Mobile h2 last line 82px -> 135px | **PASS** |
+| VQ-27 | Reading floor | prose >= 16px on every page | 0 offenders across 6 pages; type scale is now tokenised (`--text-caption/small/compact/lede/body/subhead`) | **PASS** |
 
 **23 / 24 PASS, 1 PARTIAL** on the automated gate (`node scripts/visual-gate.mjs`, 30/30 assertions across both schemes and viewports).
 
