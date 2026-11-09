@@ -7,10 +7,16 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "check": "biome check ."
+    "check": "biome check .",
+    "qa:a11y": "node scripts/a11y-gate.mjs",
+    "qa:visual": "node scripts/visual-gate.mjs",
+    "qa:shots": "node scripts/capture-fullpage.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.2",
+    "axe-core": "^4.14.0",
+    "lighthouse": "^13.6.0",
+    "puppeteer-core": "^25.16.0",
     "vite": "7.1.4"
   },
   "dependencies": {

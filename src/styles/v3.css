@@ -245,6 +245,10 @@ main:focus {
   place-items: center;
   height: 100vh;
   overflow: hidden;
+  /* The photo and its scrim sit at negative z-index. Without a stacking
+     context they fall behind the opaque .story background, which is what
+     happens on the reduced-motion path where this element is static. */
+  isolation: isolate;
 }
 
 /* No-JS and reduced-motion default: chapters stack in normal flow and every
