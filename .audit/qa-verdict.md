@@ -38,6 +38,7 @@ Every row below is asserted by the gate; a row that is not automated says so.
 | VQ-26 | Line breaking | headings balance, prose pretty | `h1,h2,h3{text-wrap:balance}`, `p,li,dd{text-wrap:pretty}`. Mobile h2 last line 82px -> 135px | **PASS** |
 | VQ-27 | Reading floor | prose >= 16px on every page | 0 offenders across 6 pages; type scale is now tokenised (`--text-caption/small/compact/lede/body/subhead`) | **PASS** |
 | VQ-28 | Compositor hints at rest | no `will-change` survives past the story | 18 elements carried `will-change` at rest; the story now toggles it through an IntersectionObserver and releases it behind the reader | **PASS** |
+| VQ-29 | Spacing scale | spacing values resolve to a documented scale | 18 loose px values collapsed to a 4-unit token scale; the two places where the scale would break a 44px touch target keep their original value | **PASS** |
 
 **23 / 24 PASS, 1 PARTIAL** on the automated gate (`node scripts/visual-gate.mjs`, 30/30 assertions across both schemes and viewports).
 

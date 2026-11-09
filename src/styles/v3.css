@@ -51,6 +51,22 @@ time,
   --shell: 1180px;
   --gutter: clamp(20px, 5vw, 56px);
   --measure: 68ch;
+  /* Spacing scale, 4-unit base. Values that fall between steps snap to the
+     nearest one so rhythm comes from a system rather than from 18 loose px
+     values. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-12: 48px;
+  --space-18: 72px;
+  --space-20: 80px;
+  --space-22: 88px;
   --section-space: clamp(88px, 11vw, 168px);
   --section-space-tight: clamp(56px, 7vw, 96px);
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
@@ -151,6 +167,9 @@ a {
 .note a,
 .section__head a {
   display: inline-block;
+  /* 10px, not 8px. Snapping this to the 4-unit scale dropped the hit area to
+     43px, one pixel under the 44px touch minimum. Accessibility wins over
+     rhythm. */
   padding-block: 10px;
 }
 
@@ -183,7 +202,7 @@ main:focus {
   z-index: 100;
   top: 12px;
   left: 12px;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   border-radius: 8px;
   background: var(--ink);
   color: #fff;
@@ -198,7 +217,7 @@ main:focus {
 
 .eyebrow {
   display: block;
-  margin-bottom: 14px;
+  margin-bottom: var(--space-3);
   /* --blue on white measured 2.19:1 at 13px. --navy clears 4.5:1 while
      staying inside the same two-hue palette. */
   color: var(--navy);
@@ -230,7 +249,7 @@ main:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--space-6);
   width: min(var(--shell), 100% - var(--gutter) * 2);
   min-height: 68px;
   margin-inline: auto;
@@ -246,7 +265,7 @@ main:focus {
 
 .desktop-nav {
   display: flex;
-  gap: 28px;
+  gap: var(--space-7);
 }
 
 .site-header nav a {
@@ -304,7 +323,7 @@ main:focus {
 }
 
 .story__scene + .story__scene {
-  margin-block-start: 72px;
+  margin-block-start: var(--space-18);
 }
 
 /* Motion path: chapters become full-stage layers. Only the chapter marked
@@ -344,15 +363,15 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .story__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 34px;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   min-height: 48px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   border: 1px solid transparent;
   border-radius: 999px;
   background: #fff;
@@ -384,8 +403,8 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 /* Contact block on the profile page. */
 .contact-list {
   display: grid;
-  gap: 10px;
-  margin: 26px 0 24px;
+  gap: var(--space-2);
+  margin: var(--space-6) 0 var(--space-6);
   padding: 0;
   list-style: none;
 }
@@ -393,9 +412,9 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .contact-list li {
   display: grid;
   grid-template-columns: 120px minmax(0, 1fr);
-  gap: 16px;
+  gap: var(--space-4);
   align-items: baseline;
-  padding-block: 10px;
+  padding-block: var(--space-2);
   border-bottom: 1px solid var(--line);
 }
 
@@ -408,7 +427,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 }
 
 .footer-updated {
-  margin-top: 18px;
+  margin-top: var(--space-4);
   /* --muted is tuned for the light paper; on the night footer it lands at
      3.13:1. 76% white over --night measures 10.96:1. */
   color: rgb(255 255 255 / 76%);
@@ -417,7 +436,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .story__scene p {
   max-width: 46ch;
-  margin-top: 22px;
+  margin-top: var(--space-5);
   color: rgb(255 255 255 / 86%);
   font-size: clamp(16px, 1.4vw, 19px);
 }
@@ -559,7 +578,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   }
 
   html[data-motion] .story__scene + .story__scene {
-    margin-block-start: 72px;
+    margin-block-start: var(--space-18);
   }
 
   .story__progress {
@@ -605,7 +624,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 }
 
 .section__head p {
-  margin-top: 18px;
+  margin-top: var(--space-4);
   color: var(--muted);
   font-size: clamp(17px, 1.5vw, 20px);
 }
@@ -625,7 +644,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
   gap: clamp(16px, 2.2vw, 30px);
-  padding-block: clamp(22px, 3vw, 34px);
+  padding-block: clamp(22px, 3vw, var(--space-8));
   border-bottom: 1px solid var(--line);
 }
 
@@ -637,7 +656,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 }
 
 .rows h3 + p {
-  margin-top: 10px;
+  margin-top: var(--space-2);
   max-width: var(--measure);
   color: var(--muted);
 }
@@ -655,7 +674,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-  gap: clamp(16px, 2vw, 28px);
+  gap: clamp(16px, 2vw, var(--space-7));
   list-style: none;
   padding: 0;
 }
@@ -663,8 +682,8 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: clamp(24px, 3vw, 36px);
+  gap: var(--space-3);
+  padding: clamp(24px, 3vw, var(--space-9));
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--paper);
@@ -698,8 +717,8 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .link-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 28px;
-  margin-top: 28px;
+  gap: var(--space-3) var(--space-7);
+  margin-top: var(--space-7);
   font-size: var(--text-compact);
 }
 
@@ -713,7 +732,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 /* ---------------------------------------------------------------- footer */
 
 .site-footer {
-  padding-block: clamp(56px, 7vw, 88px);
+  padding-block: clamp(56px, 7vw, var(--space-22));
   background: var(--night);
   color: rgb(255 255 255 / 76%);
   font-size: var(--text-compact);
@@ -722,13 +741,13 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .footer-inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 32px 48px;
+  gap: var(--space-8) var(--space-12);
   align-items: start;
 }
 
 .site-footer strong {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-2);
   color: #fff;
   font-size: var(--text-subhead);
   letter-spacing: -0.02em;
@@ -737,7 +756,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 28px;
+  gap: var(--space-2) var(--space-7);
   justify-content: flex-end;
 }
 
@@ -755,7 +774,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .photo-credit {
   grid-column: 1 / -1;
-  padding-top: 24px;
+  padding-top: var(--space-6);
   border-top: 1px solid rgb(255 255 255 / 16%);
   color: rgb(255 255 255 / 60%);
   font-size: var(--text-caption);
@@ -780,7 +799,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
     display: flex;
     align-items: center;
     min-height: 44px;
-    padding-inline: 14px;
+    padding-inline: var(--space-3);
     border: 1px solid var(--line);
     border-radius: 10px;
     font-size: var(--text-compact);
@@ -797,7 +816,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
     right: 0;
     left: 0;
     display: grid;
-    padding: 8px var(--gutter) 20px;
+    padding: var(--space-2) var(--gutter) 20px;
     background: var(--paper);
     border-bottom: 1px solid var(--line);
   }
@@ -818,7 +837,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
   .rows > li {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .story {
@@ -831,7 +850,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
   }
 
   .story__actions {
-    margin-top: 26px;
+    margin-top: var(--space-6);
   }
 }
 
@@ -839,7 +858,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .page-hero {
   position: relative;
-  padding-block: clamp(88px, 11vh, 148px) clamp(44px, 6vw, 80px);
+  padding-block: clamp(88px, 11vh, 148px) clamp(44px, 6vw, var(--space-20));
   background: var(--night);
   color: #fff;
   overflow: hidden;
@@ -866,7 +885,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 
 .page-lede {
   max-width: 52ch;
-  margin-top: 22px;
+  margin-top: var(--space-5);
   color: rgb(255 255 255 / 72%);
   font-size: clamp(17px, 1.6vw, 21px);
 }
@@ -895,8 +914,8 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .facts > div {
   display: grid;
   grid-template-columns: 200px minmax(0, 1fr);
-  gap: 12px 32px;
-  padding-block: 18px;
+  gap: var(--space-3) var(--space-8);
+  padding-block: var(--space-4);
   border-bottom: 1px solid var(--line);
 }
 
@@ -920,8 +939,8 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 }
 
 .note {
-  margin-top: clamp(48px, 6vw, 80px);
-  padding: clamp(24px, 3vw, 36px);
+  margin-top: clamp(48px, 6vw, var(--space-20));
+  padding: clamp(24px, 3vw, var(--space-9));
   border: 1px solid var(--line);
   border-left: 3px solid var(--blue);
   border-radius: 18px;
@@ -934,8 +953,8 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 }
 
 .figure {
-  margin-top: 28px;
-  padding: clamp(14px, 2vw, 22px);
+  margin-top: var(--space-7);
+  padding: clamp(14px, 2vw, var(--space-5));
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--wash);
@@ -948,7 +967,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 }
 
 .figure figcaption {
-  margin-top: 12px;
+  margin-top: var(--space-3);
   color: var(--muted);
   font-size: var(--text-caption);
   line-height: 1.6;
@@ -959,7 +978,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 }
 
 .disclosure {
-  margin-top: 28px;
+  margin-top: var(--space-7);
   border-top: 1px solid var(--line);
 }
 
@@ -975,7 +994,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 @media (max-width: 620px) {
   .facts > div {
     grid-template-columns: 1fr;
-    gap: 4px;
+    gap: var(--space-1);
   }
 }
 
@@ -991,7 +1010,7 @@ html[data-motion="animated"] .story__scene[data-active="true"] {
 .page-nav ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 28px;
+  gap: var(--space-1) var(--space-7);
   margin: 0;
   padding: 0;
   list-style: none;
