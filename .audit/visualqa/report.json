@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T18:16:49.311Z",
+  "generatedAt": "2026-11-09T19:10:45.713Z",
   "baseUrl": "http://127.0.0.1:4319",
   "checks": [
     {
@@ -189,6 +189,12 @@
       "detail": "0 element(s): "
     },
     {
+      "id": "VQ-30/index",
+      "name": "누름·호버 상태에서도 라벨 대비가 4.5:1 이상",
+      "status": "PASS",
+      "detail": "reachable=true statesDiffer=true lowest=dark/pressed=11.32:1"
+    },
+    {
       "id": "VQ-10/animated",
       "name": "스크롤이 멈춘 씬은 흐림 없이 완전 불투명",
       "status": "PASS",
@@ -208,8 +214,8 @@
     }
   ],
   "totals": {
-    "total": 34,
-    "pass": 34,
+    "total": 35,
+    "pass": 35,
     "fail": 0
   }
 }
