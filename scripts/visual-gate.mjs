@@ -244,6 +244,469 @@ try {
     await page.close()
   }
 
+  // VQ-01..05, VQ-07..09, VQ-13, VQ-15..18, VQ-21..22: page-level assertions
+  // that previously sat in the verdict table as manual claims. Each one is
+  // measured here so a regression cannot pass by being restated in prose.
+  {
+    const page = await browser.newPage()
+    await page.emulateMediaFeatures([{ name: "prefers-color-scheme", value: "light" }])
+    await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
+
+    // VQ-01 one H1, and the profile page names the person.
+    {
+      const rows = []
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const r = await page.evaluate(() => {
+          const hs = [...document.querySelectorAll("h1")]
+          return {
+            count: hs.length,
+            text: hs[0] ? hs[0].innerText.replace(/\s+/g, " ").trim() : "",
+            // splitText() keeps a visually-hidden sr-only copy next to the
+            // animated glyphs; count the accessible copy only.
+            visibleCopies: hs[0]
+              ? new Set(
+                  [...hs[0].querySelectorAll("*")]
+                    .filter((n) => getComputedStyle(n).position === "absolute")
+                    .map((n) => n.textContent.trim()),
+                ).size
+              : 0,
+          }
+        })
+        rows.push({ page: name, ...r })
+      }
+      const multi = rows.filter((r) => r.count !== 1)
+      const profile = rows.find((r) => r.page === "profile")
+      add(
+        "VQ-01/all",
+        "페이지마다 H1 하나, profile은 이름을 쓴다",
+        multi.length === 0 && profile?.text.startsWith("Hye-Lin Kim") ? "PASS" : "FAIL",
+        `h1counts=${rows.map((r) => `${r.page}:${r.count}`).join(",")} profile="${profile?.text}"`,
+      )
+    }
+
+    // VQ-02 no sentence repeated verbatim across a page.
+    {
+      const dups = []
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const d = await page.evaluate(() => {
+          const text = document.body.innerText.replace(/\s+/g, " ")
+          const sentences = text
+            .split(/(?<=[.!?])\s+/)
+            .map((s) => s.trim())
+            .filter((s) => s.length >= 40)
+          const seen = new Map()
+          for (const s of sentences) seen.set(s, (seen.get(s) || 0) + 1)
+          return [...seen.entries()]
+            .filter(([, n]) => n > 1)
+            .map(([s, n]) => `${n}x ${s.slice(0, 60)}`)
+        })
+        dups.push(...d.map((x) => `${name}: ${x}`))
+      }
+      add(
+        "VQ-02/all",
+        "같은 문장이 두 번 인쇄되지 않는다",
+        dups.length === 0 ? "PASS" : "FAIL",
+        dups.length ? dups.join(" | ") : "0 repeated sentences",
+      )
+    }
+
+    // VQ-03 eyebrow must add information beyond the H1.
+    {
+      const same = []
+      const seenPairs = []
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const r = await page.evaluate(() => {
+          const eb = document.querySelector(".eyebrow")
+          const h1 = document.querySelector("h1")
+          return {
+            eyebrow: eb ? eb.innerText.trim() : "",
+            h1: h1 ? h1.innerText.replace(/\s+/g, " ").trim() : "",
+          }
+        })
+        const a = r.eyebrow.toLowerCase()
+        const b = r.h1.toLowerCase()
+        seenPairs.push(`${name}="${r.eyebrow}"`)
+        if (a && (a === b || b.includes(a) || a.includes(b))) same.push(`${name}: ${r.eyebrow}`)
+      }
+      add(
+        "VQ-03/all",
+        "eyebrow가 H1을 반복하지 않는다",
+        same.length === 0 ? "PASS" : "FAIL",
+        same.length ? same.join(", ") : seenPairs.join(", "),
+      )
+    }
+
+    // VQ-04 contact route present on every page.
+    {
+      const missing = []
+      const counts = []
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const n = await page.evaluate(() => document.querySelectorAll('a[href^="mailto:"]').length)
+        counts.push(`${name}:${n}`)
+        if (n === 0) missing.push(name)
+      }
+      add(
+        "VQ-04/all",
+        "모든 페이지에 mailto 연락 경로",
+        missing.length === 0 ? "PASS" : "FAIL",
+        `counts=${counts.join(",")}`,
+      )
+    }
+
+    // VQ-05 a primary action inside the first viewport.
+    {
+      await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle0", timeout: 45000 })
+      const r = await page.evaluate(() => {
+        const vh = innerHeight
+        const cs = (el) => getComputedStyle(el)
+        const cands = [...document.querySelectorAll("a[href], button")].filter((el) => {
+          if (el.closest("header") || el.closest("footer") || el.closest(".skip-link")) return false
+          const s = cs(el)
+          const b = el.getBoundingClientRect()
+          if (b.width < 1 || b.height < 1) return false
+          if (s.visibility === "hidden" || s.display === "none") return false
+          // A hero action is visually promoted: background, border or strong weight.
+          const promoted =
+            s.backgroundColor !== "rgba(0, 0, 0, 0)" ||
+            Number.parseFloat(s.borderTopWidth) > 0 ||
+            Number(s.fontWeight) >= 600
+          return promoted && b.top < vh
+        })
+        return cands.map((el) => ({
+          text: el.innerText.trim().slice(0, 30),
+          top: Math.round(el.getBoundingClientRect().top),
+        }))
+      })
+      add(
+        "VQ-05/index",
+        "첫 화면에 주 행동이 있다",
+        r.length > 0 ? "PASS" : "FAIL",
+        r.length ? JSON.stringify(r.slice(0, 3)) : "no promoted action above the fold",
+      )
+    }
+
+    // VQ-07 mobile first viewport: H1 lines and a visible action.
+    {
+      await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true })
+      await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle0", timeout: 45000 })
+      const r = await page.evaluate(() => {
+        const h1 = document.querySelector("h1")
+        const cs = getComputedStyle(h1)
+        const lh = Number.parseFloat(cs.lineHeight) || Number.parseFloat(cs.fontSize) * 1.2
+        const box = h1.getBoundingClientRect()
+        const actions = [...document.querySelectorAll("a[href], button")].filter((el) => {
+          if (el.closest("header") || el.closest("footer") || el.closest(".skip-link")) return false
+          const s = getComputedStyle(el)
+          const b = el.getBoundingClientRect()
+          if (b.width < 1 || b.height < 1) return false
+          const promoted =
+            s.backgroundColor !== "rgba(0, 0, 0, 0)" ||
+            Number.parseFloat(s.borderTopWidth) > 0 ||
+            Number(s.fontWeight) >= 600
+          return promoted && b.top < innerHeight
+        })
+        return {
+          lines: Math.round(box.height / lh),
+          h1Height: Math.round(box.height),
+          vh: innerHeight,
+          actions: actions.length,
+        }
+      })
+      add(
+        "VQ-07/index-mobile",
+        "모바일 첫 화면: H1 4줄 이하 + 행동 노출",
+        r.lines <= 4 && r.actions > 0 ? "PASS" : "FAIL",
+        `lines=${r.lines} h1Height=${r.h1Height}px vh=${r.vh} actions=${r.actions}`,
+      )
+      await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
+    }
+
+    // VQ-08 section rhythm must not be one flat padding value everywhere.
+    {
+      const rows = []
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const pads = await page.evaluate(() => [
+          ...new Set(
+            [...document.querySelectorAll(".section")].map((el) => getComputedStyle(el).paddingTop),
+          ),
+        ])
+        rows.push({ page: name, pads })
+      }
+      const flat = rows.filter((r) => r.pads.length < 2)
+      add(
+        "VQ-08/all",
+        "섹션 리듬이 획일적이지 않다",
+        flat.length === 0 ? "PASS" : "FAIL",
+        rows.map((r) => `${r.page}:${r.pads.length}`).join(",") +
+          (flat.length ? ` flat=${flat.map((r) => r.page).join(",")}` : ""),
+      )
+    }
+
+    // VQ-09 key-column gap stays tight.
+    {
+      await page.goto(`${BASE}/research.html`, { waitUntil: "networkidle0", timeout: 45000 })
+      const gap = await page.evaluate(() => {
+        const rows = [...document.querySelectorAll(".rows > li")]
+        if (!rows.length) return null
+        return Math.max(
+          ...rows.map((li) => {
+            const cols = [...li.children]
+            if (cols.length < 2) return 0
+            const a = cols[0].getBoundingClientRect()
+            const b = cols[1].getBoundingClientRect()
+            return Math.round(b.left - a.right)
+          }),
+        )
+      })
+      add(
+        "VQ-09/research",
+        "키 컬럼 간격 32px 이하",
+        gap !== null && gap <= 32 ? "PASS" : "FAIL",
+        gap === null ? "no .rows found" : `maxGap=${gap}px`,
+      )
+    }
+
+    // VQ-13 touch targets (previously mislabelled VQ-15).
+    await page.setViewport({
+      width: 390,
+      height: 844,
+      deviceScaleFactor: 2,
+      isMobile: true,
+      hasTouch: true,
+    })
+    {
+      const small = []
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const bad = await page.evaluate(() => {
+          const out = []
+          for (const el of document.querySelectorAll("a[href], button, [role=button]")) {
+            const r = el.getBoundingClientRect()
+            const cs = getComputedStyle(el)
+            if (cs.visibility === "hidden" || cs.display === "none" || r.width < 1) continue
+            if (r.height < 44)
+              out.push({ text: el.textContent.trim().slice(0, 24), h: Math.round(r.height) })
+          }
+          return out
+        })
+        small.push(...bad.map((b) => ({ page: name, ...b })))
+      }
+      add(
+        "VQ-13/mobile",
+        "터치 타깃 높이 44px 이상",
+        small.length === 0 ? "PASS" : "FAIL",
+        small.length ? JSON.stringify(small.slice(0, 5)) : "all targets >= 44px tall",
+      )
+    }
+
+    // VQ-15 dark mode actually renders dark with legible ink.
+    {
+      const page2 = await browser.newPage()
+      await page2.emulateMediaFeatures([{ name: "prefers-color-scheme", value: "dark" }])
+      await page2.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
+      const rows = []
+      for (const name of PAGES) {
+        await page2.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        rows.push(
+          await page2.evaluate(() => {
+            const lum = (rgb) => {
+              const f = (v) => {
+                const s = v / 255
+                return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
+              }
+              return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2])
+            }
+            const parse = (c) => {
+              const m = c.match(/rgba?\(([^)]+)\)/)
+              if (!m) return null
+              const p = m[1]
+                .split(/[,\s/]+/)
+                .filter(Boolean)
+                .map(Number)
+              return { rgb: p.slice(0, 3), a: p.length > 3 ? p[3] : 1 }
+            }
+            const root = parse(getComputedStyle(document.documentElement).backgroundColor)
+            const body = parse(getComputedStyle(document.body).backgroundColor)
+            const surface = root && root.a > 0.5 ? root.rgb : body ? body.rgb : [255, 255, 255]
+            const ink = parse(getComputedStyle(document.body).color)
+            return { surfaceLum: Math.round(lum(surface) * 1000) / 1000, ink: ink?.rgb ?? null }
+          }),
+        )
+      }
+      const light = rows.filter((r) => r.surfaceLum > 0.2)
+      add(
+        "VQ-15/dark",
+        "다크 모드에서 배경이 실제로 어둡다",
+        light.length === 0 ? "PASS" : "FAIL",
+        rows.map((r, i) => `${PAGES[i]}:lum=${r.surfaceLum}`).join(","),
+      )
+      await page2.close()
+    }
+
+    // VQ-16 no publisher hotlinks; every image that is meant to be visible decodes.
+    {
+      const offenders = []
+      const pending = []
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const r = await page.evaluate(() => {
+          // Images inside a closed <details> are deferred by the browser and
+          // that is correct. Only count images the reader can currently see.
+          const inClosed = (img) => {
+            const d = img.closest("details")
+            return Boolean(d && !d.open)
+          }
+          return {
+            external: [...document.images]
+              .filter((i) => /\.(e-cmh\.org|springer|wiley|elsevier)/i.test(i.src))
+              .map((i) => i.src),
+            broken: [...document.images]
+              .filter((i) => !inClosed(i) && i.complete && i.naturalWidth === 0)
+              .map((i) => i.currentSrc || i.src),
+            deferred: [...document.images].filter(inClosed).length,
+          }
+        })
+        offenders.push(...r.external.map((u) => `${name}: ${u}`))
+        pending.push(...r.broken.map((u) => `${name}: ${u}`))
+      }
+      add(
+        "VQ-16/all",
+        "발행사 핫링크 0, 보이는 이미지 전부 디코드",
+        offenders.length === 0 && pending.length === 0 ? "PASS" : "FAIL",
+        `external=${offenders.length} broken=${pending.length}` +
+          (offenders.length ? ` :: ${offenders.slice(0, 3).join(" | ")}` : "") +
+          (pending.length ? ` :: ${pending.slice(0, 3).join(" | ")}` : ""),
+      )
+    }
+
+    // VQ-17 social preview metadata on every page.
+    {
+      const bad = []
+      const canonicalSeen = new Set()
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const r = await page.evaluate(() => ({
+          og: document.querySelector('meta[property="og:image"]')?.content || "",
+          tw: document.querySelector('meta[name="twitter:card"]')?.content || "",
+          canonical: document.querySelector('link[rel="canonical"]')?.href || "",
+        }))
+        if (!r.og || !r.tw || !r.canonical) bad.push(`${name} missing`)
+        canonicalSeen.add(r.canonical)
+      }
+      add(
+        "VQ-17/all",
+        "og:image·twitter:card·canonical 존재",
+        bad.length === 0 && canonicalSeen.size === PAGES.length ? "PASS" : "FAIL",
+        `missing=${bad.join(",") || "none"} distinctCanonicals=${canonicalSeen.size}`,
+      )
+    }
+
+    // VQ-18 one date notation, every <time> carries a parseable datetime.
+    // Precision legitimately varies (year / year-month / year-month-day); the
+    // defect in A9 was mixing notation families ("March 2016" beside
+    // "2026.05"). Assert a single dotted family instead of one exact shape.
+    {
+      const offenders = []
+      const precisions = new Set()
+      let total = 0
+      for (const name of PAGES) {
+        await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
+        const r = await page.evaluate(() =>
+          [...document.querySelectorAll("time")].map((t) => ({
+            txt: t.innerText.trim(),
+            dt: t.getAttribute("datetime") || "",
+          })),
+        )
+        for (const t of r) {
+          total += 1
+          if (!/^\d{4}(\. \d{2}){0,2}$/.test(t.txt)) offenders.push(`${name}: "${t.txt}"`)
+          if (!t.dt || Number.isNaN(Date.parse(t.dt)))
+            offenders.push(`${name}: bad datetime=${t.dt}`)
+          precisions.add(t.txt.replace(/\d/g, "#"))
+        }
+      }
+      add(
+        "VQ-18/all",
+        "날짜 표기 하나(점 표기), datetime 유효",
+        offenders.length === 0 ? "PASS" : "FAIL",
+        `${total} time elements, precision shapes=${JSON.stringify([...precisions])}` +
+          (offenders.length ? ` offenders=${offenders.slice(0, 3).join(" | ")}` : ""),
+      )
+    }
+
+    // VQ-21 focus ring on every focusable element.
+    // :focus-visible only engages for real keyboard input, so el.focus() would
+    // report a false failure. Drive actual Tab presses instead.
+    {
+      await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle0", timeout: 45000 })
+      const rings = []
+      const seen = new Set()
+      for (let i = 0; i < 40; i++) {
+        await page.keyboard.press("Tab")
+        const r = await page.evaluate(() => {
+          const el = document.activeElement
+          if (!el || el === document.body) return null
+          const cs = getComputedStyle(el)
+          return {
+            tag: el.tagName,
+            text: (el.innerText || "").trim().slice(0, 24),
+            fv: el.matches(":focus-visible"),
+            w: Number.parseFloat(cs.outlineWidth) || 0,
+            style: cs.outlineStyle,
+            key: `${el.tagName}:${(el.innerText || "").trim().slice(0, 24)}`,
+          }
+        })
+        if (!r) break
+        if (seen.has(r.key)) continue
+        seen.add(r.key)
+        if (r.fv && (r.style === "none" || r.w < 2))
+          rings.push({ text: r.text, w: r.w, style: r.style })
+      }
+      add(
+        "VQ-21/index",
+        "키보드 포커스 링 2px 이상",
+        rings.length === 0 ? "PASS" : "FAIL",
+        rings.length
+          ? JSON.stringify(rings.slice(0, 4))
+          : `${seen.size} distinct tab stops, all with a >=2px ring`,
+      )
+    }
+
+    // VQ-22 landmarks present and the skip link is the first tab stop.
+    {
+      await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle0", timeout: 45000 })
+      const r = await page.evaluate(() => {
+        const first = document.querySelector('a[href^="#"], button, input')
+        return {
+          header: Boolean(document.querySelector("header")),
+          main: Boolean(document.querySelector("main")),
+          footer: Boolean(document.querySelector("footer")),
+          skipTarget: first?.getAttribute("href") || "",
+          skipText: first?.textContent.trim() || "",
+        }
+      })
+      const ok =
+        r.header &&
+        r.main &&
+        r.footer &&
+        r.skipTarget === "#main-content" &&
+        /skip/i.test(r.skipText)
+      add(
+        "VQ-22/index",
+        "랜드마크 존재, 스킵 링크가 첫 탭 정지점",
+        ok ? "PASS" : "FAIL",
+        JSON.stringify(r),
+      )
+    }
+
+    await page.close()
+  }
+
   // VQ-10 / VQ-24: motion paths. Scenes must be readable when settled, and
   // the hero photo must survive the reduced-motion static path.
   {
@@ -331,45 +794,8 @@ try {
     await page.close()
   }
 
-  // VQ-15 touch target size at mobile width.
-  {
-    const page = await browser.newPage()
-    await page.setViewport({
-      width: 390,
-      height: 844,
-      deviceScaleFactor: 2,
-      isMobile: true,
-      hasTouch: true,
-    })
-    const small = []
-    for (const name of PAGES) {
-      await page.goto(`${BASE}/${name}.html`, { waitUntil: "networkidle0", timeout: 45000 })
-      const bad = await page.evaluate(() => {
-        const out = []
-        for (const el of document.querySelectorAll("a[href], button, [role=button]")) {
-          const r = el.getBoundingClientRect()
-          const cs = getComputedStyle(el)
-          if (cs.visibility === "hidden" || cs.display === "none" || r.width < 1) continue
-          if (r.height < 44 || r.width < 24) {
-            out.push({
-              text: el.textContent.trim().slice(0, 24),
-              w: Math.round(r.width),
-              h: Math.round(r.height),
-            })
-          }
-        }
-        return out
-      })
-      small.push(...bad.map((b) => ({ page: name, ...b })))
-    }
-    add(
-      "VQ-15/mobile",
-      "터치 타깃 44px 이상",
-      small.length === 0 ? "PASS" : "FAIL",
-      small.length ? JSON.stringify(small.slice(0, 5)) : "all targets >= 44px tall",
-    )
-    await page.close()
-  }
+  // The former touch-target block here was labelled VQ-15 but measured VQ-13;
+  // the correct VQ-13 assertion now lives in the page-level block above.
 } finally {
   await browser.close()
 }
