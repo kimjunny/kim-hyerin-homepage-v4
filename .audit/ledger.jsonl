@@ -13,7 +13,7 @@
 {"ts":"2026-11-09T15:23:00Z","step":"13","phase":"implement","event":"lane-d","note":"local 900px WebP 1.21MB->125KB, og:image, canonical on 6 pages; VQ-16,17","artifact":"PR #4"}
 {"ts":"2026-11-09T15:24:00Z","step":"14","phase":"verify","event":"merge","note":"PR #1,#2,#3 merged clean; #4 rebased over #3 conflict on profile.html head","artifact":"main 7eb46a3"}
 {"ts":"2026-11-09T15:25:00Z","step":"15","phase":"verify","event":"autocrlf","note":"core.autocrlf=true was rewriting sources to CRLF and failing biome; pinned false","artifact":"repo config"}
-{"ts":"2026-11-09T15:26:00Z","step":"16","phase":"verify","event":"regression","note":"footer-updated 3.13:1 on night footer found by VQ-14; fixed to 7.9:1","artifact":"src/styles/v3.css"}
+{"ts":"2026-11-09T15:26:00Z","step":"16","phase":"verify","event":"regression","note":"footer-updated 3.13:1 on night footer found by VQ-14; fixed to 10.96:1","artifact":"src/styles/v3.css"}
 {"ts":"2026-11-09T15:27:00Z","step":"17","phase":"verify","event":"full-suite","note":"VQ-01..23 all PASS on merged main","artifact":".audit/qa-verdict.md"}
 {"ts":"2026-11-09T15:28:00Z","step":"18","phase":"record","event":"pr-5","note":"audit record: references, violations, plan, ledger, verdict","artifact":"PR #5"}
 {"ts":"2026-11-09T16:13:19.679Z","step":"19","phase":"verify","event":"axe-baseline","note":"axe-core 4.14.0: 0 violations across 6 pages x 2 viewports, 434 rule passes; control run detected image-alt/button-name/region so the zero is trustworthy","artifact":".audit/axe/axe-report.json"}
@@ -26,3 +26,4 @@
 {"ts":"2026-11-09T16:13:19.679Z","step":"26","phase":"record","event":"pr-6","note":"external tool evidence, reproducible gates, VQ-24 fix and before/after captures","artifact":"PR #6"}
 {"ts":"2026-11-09T16:30:18.893Z","step":"27","phase":"verify","event":"live-baseline","note":"deployed v3 captured at 1440x900 and 390x844 (viewport + full page), HTTP 200, title and H1 recorded; full page uses reduced motion because the live build gates content behind scroll reveal","artifact":".audit/shots/live/live-manifest.json"}
 {"ts":"2026-11-09T16:30:18.893Z","step":"28","phase":"verify","event":"final-main-gates","note":"merged main 338e6de: build exit 0, biome 13 files clean, axe 0 violations/12 runs with control verified, visual gate 16/16","artifact":".audit/visualqa/report.json"}
+{"ts":"2026-11-09T16:53:00.327Z","step":"29","phase":"verify","event":"correction","note":"the footer fix was recorded as 7.9:1 by hand arithmetic; the browser measurement and an independent recomputation both give 10.96:1, so the note and the CSS comment were corrected and a reproducible before/after capture pair was added","artifact":".audit/shots/footer/"}
