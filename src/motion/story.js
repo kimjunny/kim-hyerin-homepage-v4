@@ -22,13 +22,28 @@ const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
 /* ------------------------------------------------------------ static path */
 
 function showEverything() {
+  const story = document.querySelector(".story")
+  if (story) {
+    story.style.height = "auto"
+    story.dataset.progress = "1"
+  }
+  const stage = document.querySelector(".story__stage")
+  if (stage) stage.style.position = "static"
+
   for (const el of document.querySelectorAll(".story__scene")) {
+    el.style.transition = "none"
     el.style.opacity = "1"
     el.style.filter = "none"
     el.style.transform = "none"
     el.dataset.active = "true"
+    el.dataset.settled = "true"
   }
-  for (const el of document.querySelectorAll(".reveal")) el.dataset.shown = "true"
+  for (const el of document.querySelectorAll(".reveal, .rows > *, .cards > *, .section__head")) {
+    el.style.opacity = "1"
+    el.style.filter = "none"
+    el.style.transform = "none"
+    el.dataset.shown = "true"
+  }
   document.documentElement.dataset.motion = "static"
 }
 
@@ -91,75 +106,72 @@ function pinnedStory() {
   if (!story || scenes.length < 2) return
 
   const bar = story.querySelector(".story__progress span")
+  const EASE = "cubic-bezier(0.16, 1, 0.3, 1)"
+  const DURATION = 620
+  const HANDOVER = `opacity ${DURATION}ms ${EASE}, filter ${DURATION}ms ${EASE}, transform ${DURATION}ms ${EASE}`
 
-  // One scrubbed timeline drives the whole chapter sequence. `sync` smooths the
-  // scrub without decoupling it from position: the value is still derived from
-  // where the scroll is, never from which callbacks fired.
-  const tl = createTimeline({
-    defaults: { ease: "inOutQuad" },
+  let lead = -1
+
+  // The handover is a CSS transition, not a scrub. A transition always reaches
+  // its end value, so stopping the scroll mid-chapter still settles on one
+  // fully opaque, unblurred chapter. The blur/scale depth cue that was approved
+  // for this design survives; only the resting half-visible state is removed.
+  function show(index, direction) {
+    if (index === lead) return
+    const incoming = scenes[index]
+    const outgoing = lead >= 0 ? scenes[lead] : null
+    lead = index
+
+    for (const [i, el] of scenes.entries()) el.dataset.active = i === index ? "true" : "false"
+
+    if (outgoing) {
+      outgoing.style.transition = "none"
+      outgoing.style.opacity = "0"
+      outgoing.style.filter = "none"
+      outgoing.style.transform = "none"
+    }
+
+    incoming.style.transition = "none"
+    incoming.style.opacity = "0.35"
+    incoming.style.filter = "blur(7px)"
+    incoming.style.transform = `translate3d(0, ${direction >= 0 ? 22 : -22}px, 0)`
+    void incoming.offsetWidth
+
+    incoming.style.transition = HANDOVER
+    incoming.style.opacity = "1"
+    incoming.style.filter = "blur(0px)"
+    incoming.style.transform = "translate3d(0, 0, 0)"
+  }
+
+  let lastY = window.scrollY
+
+  createTimeline({
     autoplay: onScroll({
       target: story,
       enter: "top top",
       leave: "bottom bottom",
-      sync: 0.18,
       onUpdate: (self) => {
         const p = self.progress
         if (bar) bar.style.width = `${p * 100}%`
-        // Expose the derived progress for verification and for the header.
         story.dataset.progress = p.toFixed(3)
-        const lead = Math.min(scenes.length - 1, Math.round(p * (scenes.length - 1)))
-        for (const [i, el] of scenes.entries()) el.dataset.active = i === lead ? "true" : "false"
+        const direction = window.scrollY >= lastY ? 1 : -1
+        lastY = window.scrollY
+        const index = Math.min(scenes.length - 1, Math.floor(p * scenes.length + 0.0001))
+        show(index, direction)
       },
     }),
   })
 
-  // Chapter 1 leaves as chapter 2 arrives, and so on: each handover is a
-  // simultaneous blur-out / blur-in with a scale change, which reads as a cut
-  // through depth rather than a cross-fade.
-  // Scene i owns the timeline position i * step, so with three scenes the
-  // chapters lead at progress 0, 0.5 and 1. Each handover overlaps by 200ms so
-  // one chapter is always carrying the stage.
-  const step = 1000
-  const fade = 800
-  const total = (scenes.length - 1) * step
-
-  scenes.forEach((scene, i) => {
-    const centre = i * step
-    if (i > 0) {
-      tl.add(
-        scene,
-        {
-          opacity: [0, 1],
-          scale: [1.14, 1],
-          y: [80, 0],
-          filter: ["blur(16px)", "blur(0px)"],
-          duration: fade,
-        },
-        centre - fade,
-      )
-    }
-    if (i < scenes.length - 1) {
-      tl.add(
-        scene,
-        {
-          opacity: [1, 0],
-          scale: [1, 0.9],
-          y: [0, -70],
-          filter: ["blur(0px)", "blur(14px)"],
-          duration: fade,
-        },
-        centre + (step - fade),
-      )
-    }
+  // The backdrop keeps drifting across the whole track so the stage never feels
+  // frozen behind the copy.
+  createTimeline({
+    defaults: { ease: "linear" },
+    autoplay: onScroll({ target: story, enter: "top top", leave: "bottom bottom" }),
   })
+    .add(".story__photo", { scale: [1.06, 1.24], y: ["0%", "-5%"] }, 0)
+    .add(".story__glow", { scale: [1, 1.5], opacity: [1, 0.5] }, 0)
 
-  // The backdrop keeps moving through the whole track: slow push-in plus a
-  // bounded vertical drift, so the stage never feels static behind the copy.
-  tl.add(".story__photo", { scale: [1.06, 1.24], y: ["0%", "-5%"], duration: total }, 0).add(
-    ".story__glow",
-    { scale: [1, 1.5], opacity: [1, 0.5], duration: total },
-    0,
-  )
+  show(0, 1)
 }
 
 /* --------------------------------------------------------- scroll reveals */
@@ -287,7 +299,6 @@ function boot() {
   document.documentElement.dataset.motion = "animated"
   // Hide what is about to animate, in one frame, so nothing flashes before its
   // scroll observer fires. CSS keeps these visible when this never runs.
-  utils.set(".story__scene + .story__scene", { opacity: 0 })
   utils.set(".story__photo, .story__glow, .story__progress", { opacity: 0 })
   utils.set(".page-hero__glow, .page-hero .eyebrow, .page-lede", { opacity: 0 })
   heroIntro()
@@ -297,6 +308,25 @@ function boot() {
 }
 
 boot()
+
+// A runtime flip of the OS preference must land on a readable page in both
+// directions, not only when motion is turned off.
 reduced.addEventListener("change", () => {
-  if (reduced.matches) showEverything()
+  if (reduced.matches) {
+    showEverything()
+    return
+  }
+  const story = document.querySelector(".story")
+  if (story) story.style.removeProperty("height")
+  const stage = document.querySelector(".story__stage")
+  if (stage) stage.style.removeProperty("position")
+  for (const el of document.querySelectorAll(".story__scene")) {
+    el.style.removeProperty("transition")
+    el.style.removeProperty("opacity")
+    el.style.removeProperty("filter")
+    el.style.removeProperty("transform")
+    el.dataset.settled = "false"
+  }
+  document.documentElement.dataset.motion = "animated"
+  window.location.reload()
 })
