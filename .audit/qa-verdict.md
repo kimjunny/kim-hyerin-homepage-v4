@@ -39,6 +39,7 @@ Every row below is asserted by the gate; a row that is not automated says so.
 | VQ-27 | Reading floor | prose >= 16px on every page | 0 offenders across 6 pages; type scale is now tokenised (`--text-caption/small/compact/lede/body/subhead`) | **PASS** |
 | VQ-28 | Compositor hints at rest | no `will-change` survives past the story | 18 elements carried `will-change` at rest; the story now toggles it through an IntersectionObserver and releases it behind the reader | **PASS** |
 | VQ-29 | Spacing scale | spacing values resolve to a documented scale | 18 loose px values collapsed to a 4-unit token scale; the two places where the scale would break a 44px touch target keep their original value | **PASS** |
+| VQ-30 | Interactive contrast | label holds 4.5:1 through hover and press, in both schemes | Generic `a:hover` outbid `.button`, so the label inherited link blue: 5.148:1 light but 1.578:1 hover and 1.096:1 pressed in dark. Pinned per state; lowest measured state 11.32:1. The check also had to be fixed twice: it reused a page already scrolled past the live chapter, and it probed only the OS default scheme | **PASS** |
 
 **23 / 24 PASS, 1 PARTIAL** on the automated gate (`node scripts/visual-gate.mjs`, 30/30 assertions across both schemes and viewports).
 

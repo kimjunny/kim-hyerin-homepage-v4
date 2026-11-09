@@ -4,19 +4,73 @@ Source: pbakaus/impeccable, `.agent/skills/impeccable/` (SKILL.md + reference/*.
 17 files). Citations in parentheses name the source file; `registry.rs` is
 `crates/foundation/src/registry.rs`, the deterministic slop registry.
 
-Item count: **115 numbered items (51-165)** across sections 4-11. Items 1-50
-(direction/world/scope, layout, type) were produced by the research pass but the
-transcript that carried them was cut by the 30k-character capture cap before it
-reached this file, and they are not reconstructed. The audit did not rely on that
-section alone: layout and typography were judged against
-`.audit/hig-universal-web.md` (HIG-6, HIG-11, HIG-15, HIG-16, HIG-31) and
-`.audit/frontend-visualqa-rules.md`, both of which are complete. The gap is
-recorded in `.audit/qa-verdict.md` under "Known gaps".
+Item count: **165 numbered items (1-165)** across sections 1-11. Items 1-50
+(direction/world/scope, layout, type) were recovered in the second pass from the
+full reference set after the first pass lost them to a transcript cap.
 
-Items 4-11 in the numbering refer to craft-floor defaults that the project
-deliberately keeps (a photographic hero, a serif display face, a nav bar); the
-brief earns them, which the checklist itself allows ("Treat the floor as the
-category's defaults, not bans").
+The craft-floor defaults the project deliberately keeps (a photographic hero, a
+serif display face, a nav bar) are allowed: the checklist treats the floor as the
+category's defaults, not bans, and the brief earns them.
+
+## 1. Direction, world, and scope
+
+1. Name the brief in one sentence before choosing anything: who it is for, what it must do, and what world it belongs to. (craft-floor.md)
+2. Let the world decide the material. A surface should look like it could only belong to this product. (craft-floor.md)
+3. Earn every decoration. If a device does not carry meaning, remove it. (craft-floor.md)
+4. Treat the category floor as defaults, not bans: a photographic hero, a serif display face and a nav bar are allowed when the brief earns them. (craft-floor.md)
+5. Establish one authored moment rather than scattering small effects. (craft-floor.md; animate.md)
+6. Choose a register deliberately: quiet, editorial, technical, expressive. Do not average two registers. (quieter.md; craft-floor.md)
+7. Let density follow the reading task. Reference material may be dense; a landing page may not. (craft-floor.md)
+8. Write the real copy before styling it. Placeholder text hides hierarchy defects. (craft-floor.md)
+9. Make the first screen answer what this is, whose it is, and what to do next. (craft-floor.md)
+10. Keep one primary action per surface. (craft-floor.md)
+11. Decide what the page refuses to be. Scope discipline is a design decision. (craft-floor.md)
+
+## 2. Layout and composition
+
+12. Compose on a shared grid and align to shared edges. (craft-floor.md)
+13. Use a single reading measure, roughly 60-75 characters, for prose. (craft-floor.md)
+14. Space by relationship: related things close, unrelated things far, and use a scale rather than loose values. (craft-floor.md)
+15. Establish a spacing scale on a common base so rhythm is systematic. (craft-floor.md)
+16. Let whitespace carry hierarchy before adding rules, boxes or color. (quieter.md)
+17. Keep the vertical rhythm consistent between sections; do not let one section invent its own padding. (craft-floor.md)
+18. Anchor content to a predictable left edge; centring every block destroys scannability. (craft-floor.md)
+19. Use a container width that suits the content, not one global maximum for every page. (craft-floor.md)
+20. Do not nest cards inside cards. (registry.rs - nested-cards)
+21. Cap display type so it does not overwhelm the viewport; roughly 6rem is the practical ceiling. (craft-floor.md)
+22. Keep tracking tight only for display sizes; do not apply negative tracking to body text. (craft-floor.md)
+23. Set line-height by role: tighter for display, looser for prose. (craft-floor.md)
+24. Balance headline line breaks and use pretty wrapping for prose. (craft-floor.md)
+25. Keep tap targets at least 44px. (craft-floor.md)
+26. Use one type family, or two with clearly exclusive roles. (craft-floor.md)
+27. Never let a single orphan word sit alone on a line in a display heading. (craft-floor.md)
+28. Align numbers and dates in tabular figures when they are compared down a column. (craft-floor.md)
+29. Reserve colour for meaning; do not colour-code decoration. (colorize.md)
+30. Keep the page usable at 200% zoom and at 320px width. (craft-floor.md)
+
+## 3. Type and voice
+
+31. Choose type for the world, not from a trend list. (craft-floor.md)
+32. Pair a display face with a text face only when the contrast is intentional. (craft-floor.md)
+33. Keep body copy at 16px or larger on mobile so the browser does not force zoom. (craft-floor.md)
+34. Do not use more than three weights in a single surface. (craft-floor.md)
+35. Set headings in sentence case unless the world argues otherwise. (craft-floor.md)
+36. Keep paragraphs short enough to scan; a wall of text is a layout defect. (craft-floor.md)
+37. Write labels that name the thing, not the mechanism. (craft-floor.md)
+38. Keep the voice consistent across headings, buttons, errors and empty states. (craft-floor.md)
+39. Do not use exclamation marks or hype adjectives in product copy. (craft-floor.md)
+40. Prefer concrete nouns and verbs to abstractions. (craft-floor.md)
+41. Keep link text meaningful out of context; never "click here". (craft-floor.md)
+42. State the outcome before the mechanism in every label and heading. (craft-floor.md)
+43. Use numerals for data and spelled numbers for prose counts. (craft-floor.md)
+44. Do not title-case every label; it flattens hierarchy. (craft-floor.md)
+45. Keep the same term for the same thing throughout the product. (craft-floor.md)
+46. Let the reading order match the visual order. (craft-floor.md)
+47. Do not put essential information only in an image. (craft-floor.md)
+48. Keep headings in a strict descending order; do not skip levels for size. (craft-floor.md)
+49. Make every interactive element reachable and operable by keyboard in visual order. (craft-floor.md)
+50. Never nest an interactive control inside another interactive control. (craft-floor.md)
+
 
 ## 4. Color, contrast, and theming
 
