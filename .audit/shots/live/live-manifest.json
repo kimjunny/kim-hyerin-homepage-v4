@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-11-09T16:27:59.499Z",
+  "url": "https://kim-hyerin-homepage-v3.vercel.app/",
+  "shots": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "status": 200,
+      "title": "Social Pharmacy Laboratory | Sahmyook University",
+      "h1": "Social Pharmacy Laboratory @ Sahmyook University",
+      "viewFile": ".audit/shots/live/live-index-desktop-viewport.png",
+      "file": ".audit/shots/live/live-index-desktop.png"
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 304,
+      "title": "Social Pharmacy Laboratory | Sahmyook University",
+      "h1": "Social Pharmacy Laboratory @ Sahmyook University",
+      "viewFile": ".audit/shots/live/live-index-mobile-viewport.png",
+      "file": ".audit/shots/live/live-index-mobile.png"
+    }
+  ]
+}

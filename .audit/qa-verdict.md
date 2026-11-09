@@ -160,6 +160,7 @@ bun run preview --port 4319        # separate terminal
 bun run qa:a11y                    # axe, 12 runs, control-verified
 bun run qa:visual                  # VQ-06/10/11/12/14/15/19/20/24
 bun run qa:shots                   # 12 full-page captures at 1440 and 390
+node scripts/capture-live.mjs      # deployed v3 baseline captures
 ```
 
 Each script exits non-zero on failure, so they work as CI gates as written.
@@ -167,6 +168,9 @@ Each script exits non-zero on failure, so they work as CI gates as written.
 ## Artifacts
 
 Live captures (all committed):
+- `.audit/shots/live/` — the deployed v3 baseline at 1440x900 and 390x844,
+  viewport and full-page, with `live-manifest.json` recording URL, HTTP status,
+  title and H1
 - `.audit/shots/motion/{before,after}`
 - `.audit/shots/identity/{before,after}`
 - `.audit/shots/layout/{before,after}`
