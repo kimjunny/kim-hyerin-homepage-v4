@@ -1,8 +1,9 @@
 # QA Verdict — kim-hyerin-homepage-v4
 
-Run: 2026-11-09 · merged `main` @ `7eb46a3` · preview `http://127.0.0.1:4319`
+Run: 2026-11-09 · merged `main` @ `3a0e171` · preview `http://127.0.0.1:4319`
 Viewports: 1440x900 DPR 1 and 390x844 DPR 3 · schemes light + dark
 Method: Bun.WebView (Chromium) + CDP `Emulation.setEmulatedMedia` / `setDeviceMetricsOverride`.
+External tools: axe-core 4.14.0 (`scripts/a11y-gate.mjs`), Lighthouse 13.6.0 (`scripts/`).
 Every row below records a measurement taken in this session, not an intention.
 
 ## Verdict table
@@ -31,19 +32,67 @@ Every row below records a measurement taken in this session, not an intention.
 | VQ-20 | Build and lint | exit 0 both | `bun run build` 0, `bun run check` 0 | **PASS** |
 | VQ-21 | Keyboard focus visible | >= 2px ring | `solid 2px rgb(127,179,238)` | **PASS** |
 | VQ-22 | Landmarks and skip link | header/nav/main/footer, skip first | a.skip-link -> header.site-header -> main#main-content -> footer.site-footer | **PASS** |
-| VQ-23 | Before/after pair | one capture each per fixed violation | `.audit/shots/{motion,identity,layout,assets}/{before,after}` | **PASS** |
+| VQ-23 | Before/after pair | one capture each per fixed violation | `.audit/shots/{motion,identity,layout,assets,vq24}/{before,after}` | **PASS** |
+| VQ-24 | Reduced-motion hero photo | photo paints on the static path | before: `paints=false`; after: `paints=true`, opacity 0.3 | **PASS** |
 
-**23 / 23 PASS.**
+**24 / 24 PASS** on the automated gate (`node scripts/visual-gate.mjs`, 16/16 assertions across both schemes and viewports), plus the manual rows above.
+
+## External tool evidence
+
+### axe-core 4.14.0 — `node scripts/a11y-gate.mjs`
+
+```
+PASS desktop:index passes=36 violations=0
+PASS desktop:profile passes=36 violations=0
+PASS desktop:research passes=34 violations=0
+PASS desktop:publications passes=38 violations=0
+PASS desktop:education passes=34 violations=0
+PASS desktop:sources passes=34 violations=0
+PASS mobile:index passes=38 violations=0
+PASS mobile:profile passes=38 violations=0
+PASS mobile:research passes=36 violations=0
+PASS mobile:publications passes=38 violations=0
+PASS mobile:education passes=36 violations=0
+PASS mobile:sources passes=36 violations=0
+axe 4.14.0: 0 violations across 12 runs (6 pages x 2 viewports), 434 rule passes
+control run detected: button-name, image-alt, region -> scanner verified
+Accessibility gate PASSED.
+```
+
+The control run injects an alt-less image and an empty button before the real
+scan. It must report `image-alt` and `button-name`, which proves the zero above
+is a clean page rather than a scanner that never loaded. Report:
+`.audit/axe/axe-report.json`.
+
+### Lighthouse 13.6.0 — 12 runs
+
+| Run | Perf | A11y | Best practices | SEO | LCP | CLS |
+|---|---|---|---|---|---|---|
+| desktop x 6 pages | 100 | 100 | 100 | 100 | 0.3–0.4 s | 0 |
+| mobile x 6 pages | 99–100 | 100 | 100 | 100 | 1.1–2.0 s | 0 |
+
+Worst case is mobile `index` at performance **99** (LCP 2.0 s, TBT 0 ms).
+All 12 runs: accessibility 100, best practices 100, SEO 100, CLS 0.
+Full data: `.audit/lighthouse/lighthouse-summary.json`.
 
 ## Defects found during the final run (and fixed)
 
-One regression surfaced only when the whole suite ran against merged `main`:
+Two regressions surfaced only when the whole suite ran against merged `main`:
 
 - `.footer-updated` ("Last updated 2026. 11. 09") used `--muted`, a token tuned
   for the light paper. On the night footer that measured **3.13:1** at 13px,
   below the 4.5:1 floor. Changed to `rgb(255 255 255 / 76%)` over `--night`,
   which measures **7.9:1**. Re-ran VQ-14 on all six pages in both schemes:
   0 failures. Commit `fix(footer): 밝은 배경용 muted 색이 어두운 푸터에서 3.13:1이던 것을 고친다`.
+
+- The reduced-motion hero photo disappeared entirely. `.story__stage` switches
+  from `position: sticky` to `static` on the reduced-motion path, which removed
+  the stacking context that `.story__photo` (`z-index: -2`) depends on, so the
+  photo fell behind the opaque `.story` background. Added `isolation: isolate`
+  to `.story__stage` so the context exists on both paths. Measured
+  `photoPaints` false -> true; captures in `.audit/shots/vq24/`. This is VQ-24,
+  a new scenario added because the original 23 never rendered the reduced-motion
+  hero with the photo asserted.
 
 ## Violations closed
 
@@ -98,9 +147,22 @@ One regression surfaced only when the whole suite ran against merged `main`:
   `.audit/frontend-visualqa-rules.md`, which are complete.
 - The hero's white-on-photograph text is excluded from the automated contrast
   sweep (a flat fg/bg calculation cannot score it); it was judged from the
-  captures in `.audit/shots/layout/after`.
-- No Lighthouse/axe run was executed. VQ-13, VQ-14, VQ-21 and VQ-22 cover the
-  same ground by direct measurement, but an external tool pass is not claimed.
+  captures in `.audit/shots/layout/after` and the full-page set. axe reports it
+  as `incomplete` rather than `violation`, matching that limitation.
+- Lighthouse numbers come from a local preview server with local assets, so they
+  measure layout and payload, not production CDN latency.
+
+## Reproducing the gates
+
+```
+bun run build
+bun run preview --port 4319        # separate terminal
+bun run qa:a11y                    # axe, 12 runs, control-verified
+bun run qa:visual                  # VQ-06/10/11/12/14/15/19/20/24
+bun run qa:shots                   # 12 full-page captures at 1440 and 390
+```
+
+Each script exits non-zero on failure, so they work as CI gates as written.
 
 ## Artifacts
 
@@ -109,6 +171,12 @@ Live captures (all committed):
 - `.audit/shots/identity/{before,after}`
 - `.audit/shots/layout/{before,after}`
 - `.audit/shots/assets/{before,after}`
+- `.audit/shots/vq24/{before,after}` — reduced-motion hero regression
+- `.audit/shots/fullpage/*.webp` — 12 full-page captures (6 pages x 2 viewports)
+  with `capture-manifest.json`
+- `.audit/axe/axe-report.json` — axe run incl. control verification
+- `.audit/lighthouse/lighthouse-summary.json` — 12 Lighthouse runs
+- `.audit/visualqa/report.json` — visual gate results
 
 Machine-readable probes this session wrote to the run directory
 `C:/Users/yejun/AppData/Local/Temp/ulw-hyerin-4eEZHJ/audit/`:
