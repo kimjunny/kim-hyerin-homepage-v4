@@ -788,6 +788,35 @@ try {
       )
     }
 
+    // VQ-28 will-change at rest: a compositor hint belongs to a running
+    // animation, not to every block on the page. Revealed sections must release
+    // it once they settle.
+    {
+      await page.evaluate(async () => {
+        const H = document.documentElement.scrollHeight
+        for (let y = 0; y < H; y += 300) {
+          window.scrollTo(0, y)
+          await new Promise((r) => setTimeout(r, 90))
+        }
+        // Stay at the foot of the page: the story is behind the reader, so its
+        // compositor hints must already be released.
+        window.scrollTo(0, H)
+      })
+      await new Promise((r) => setTimeout(r, 2200))
+      const r = await page.evaluate(() => {
+        const stuck = [...document.querySelectorAll("*")]
+          .filter((e) => getComputedStyle(e).willChange !== "auto")
+          .map((e) => (e.className || e.tagName).toString().split(" ")[0])
+        return { count: stuck.length, who: [...new Set(stuck)] }
+      })
+      add(
+        "VQ-28/index",
+        "휴지 상태에서 will-change가 남지 않는다",
+        r.count === 0 ? "PASS" : "FAIL",
+        `${r.count} element(s): ${r.who.join(", ")}`,
+      )
+    }
+
     await page.close()
   }
 

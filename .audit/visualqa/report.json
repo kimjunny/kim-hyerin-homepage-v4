@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T17:44:26.610Z",
+  "generatedAt": "2026-11-09T18:05:15.947Z",
   "baseUrl": "http://127.0.0.1:4319",
   "checks": [
     {
@@ -183,6 +183,12 @@
       "detail": "0 offender(s) []"
     },
     {
+      "id": "VQ-28/index",
+      "name": "휴지 상태에서 will-change가 남지 않는다",
+      "status": "PASS",
+      "detail": "0 element(s): "
+    },
+    {
       "id": "VQ-10/animated",
       "name": "스크롤이 멈춘 씬은 흐림 없이 완전 불투명",
       "status": "PASS",
@@ -202,8 +208,8 @@
     }
   ],
   "totals": {
-    "total": 33,
-    "pass": 33,
+    "total": 34,
+    "pass": 34,
     "fail": 0
   }
 }
