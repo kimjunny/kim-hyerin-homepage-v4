@@ -1,0 +1,40 @@
+/* Research — page-specific rules layered on laboratory.css.
+   The shared sheet already styles page-head, page-layout, section-nav,
+   reading-block, method-list, link-cluster and note; only what this page
+   needs beyond those lives here. Tokens come from laboratory.css. */
+
+/* The "On this page" links scroll to the four sections; without this the
+   sticky header covers the heading the link lands on. */
+.reading-block[id] {
+  scroll-margin-top: calc(var(--header-h) + 32px);
+}
+
+/* The HOPE Center heading is 60 characters; capped near the paragraph
+   measure it breaks into two balanced lines instead of overhanging the
+   68ch text column. Short headings are unaffected. */
+.reading-block h2 {
+  max-width: 34ch;
+}
+
+@media (min-width: 641px) {
+  /* Two of the eight method labels ("Drug pricing, reimbursement, and
+     pharmaceutical policy"; ICER's "Incremental cost-effectiveness ratio")
+     wrap badly in the shared 200px label column. A column that grows to
+     260px on wide screens keeps them to two lines and leaves the
+     description column at roughly the same 68ch measure as the paragraphs.
+     Percentage of the row width, so every row keeps the same column edge.
+     Scoped under .page-content because the production build links this
+     sheet BEFORE laboratory.css, so an equal-specificity override loses. */
+  .page-content .method-list > div {
+    grid-template-columns: clamp(200px, 30%, 260px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 819px) {
+  /* Brief §3: below 820px the section nav follows the content (profile is
+     the only page whose sidebar stays first). laboratory.css already orders
+     it this way; restated so the page's own sheet carries the intent. */
+  .page-layout > .page-sidebar {
+    order: 2;
+  }
+}

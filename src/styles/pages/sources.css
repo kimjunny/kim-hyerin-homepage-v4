@@ -1,0 +1,33 @@
+/* Resources (sources.html): page rules on top of laboratory.css.
+   The mobile order (sidebar after the content below 820px) already comes from
+   the shared .page-sidebar rule, so nothing here repeats it. */
+
+/* ---------------------------------------------------------------- ledgers */
+
+/* Each ledger reads as a closed table under its heading: the h2's 24px margin
+   is the only gap, a firmer rule opens and closes it, hairlines split rows. */
+.source-ledger {
+  margin-top: 0;
+  border-block: 1px solid var(--line-strong);
+}
+
+/* ---------------------------------------------------------- campus figure */
+
+/* The credited photograph as a figure card, its credit set as the caption. */
+.campus-figure figcaption {
+  padding-top: 16px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.campus-figure .link-cluster {
+  margin-top: 16px;
+}
+
+@media (min-width: 641px) {
+  /* Room for the longest label ("Graduate school") on one line. */
+  .source-ledger li {
+    grid-template-columns: 148px minmax(0, 1fr);
+  }
+}

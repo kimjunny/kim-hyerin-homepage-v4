@@ -5,6 +5,8 @@ const root = fileURLToPath(new URL(".", import.meta.url))
 
 export default defineConfig({
   build: {
+    manifest: true,
+    sourcemap: false,
     rollupOptions: {
       input: {
         home: `${root}index.html`,

@@ -1,0 +1,49 @@
+/* Education — page-specific layout on top of laboratory.css.
+   A short page: two reading blocks beside a four-row facts card. The closing
+   note is a direct child of .page-layout here (not of .page-content) so it
+   spans both columns and the lower half of the page is not an empty gutter
+   under the sticky sidebar. */
+
+/* Rows are separated like reading blocks (64px desktop, 48px mobile).
+   Every rule here wins on specificity, not source order: the production build
+   links the page stylesheet BEFORE laboratory.css. */
+.shell.page-layout {
+  row-gap: var(--block-gap);
+}
+
+.page-layout > .note {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+/* The date in the "Field activity" eyebrow recedes behind the label. */
+.reading-block .eyebrow time {
+  font-weight: 500;
+  color: var(--muted);
+}
+
+@media (min-width: 1024px) {
+  /* Full-width panel: paragraph left, link chip right, vertically centred —
+     a closing band rather than a callout with a dead right half. */
+  .page-layout > .note {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 48px;
+  }
+
+  .page-layout > .note .link-cluster {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 819px) {
+  /* Brief §3: below 820px the sidebar follows the content everywhere except
+     profile.html. laboratory.css keeps any facts card first; this facts card is
+     reference material, so that shared exception is reversed here. */
+  .page-layout > aside.page-sidebar {
+    order: 2;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+}

@@ -1,0 +1,53 @@
+/* Publications — page-specific rules on top of laboratory.css.
+   The shared sheet already styles page-head, page-layout, page-sidebar,
+   section-nav, publication-row, paper-figure, figure-disclosure, link-cluster
+   and note. This file only tunes rhythm and wrapping for this page's content. */
+
+/* The list closes on a hairline so the note panel starts from a finished edge
+   instead of floating after the last row's chips. */
+.publication-list > .publication-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* The 2026 row's method label is long for a 13px caps eyebrow. Balanced lines
+   stop it from ending on an orphaned "volume and issue" and keep it from
+   stretching across the whole column above the title. */
+.publication-row .paper-meta {
+  max-width: 60ch;
+  text-wrap: balance;
+}
+
+/* The subtitle sits closer to its title than to the abstract paragraph. */
+.publication-copy .paper-subtitle + p {
+  margin-top: 20px;
+}
+
+/* The graphical abstract gets a little more air above and below the chips. */
+.paper-layout > .paper-figure {
+  margin-top: 8px;
+}
+
+@media (max-width: 819px) {
+  /* Brief §3: on this page the sidebar follows the content below 820px
+     (only profile.html keeps its facts card first). */
+  .page-layout > .page-sidebar {
+    order: 2;
+  }
+
+  /* On-page links become 44px touch targets (brief §6). */
+  .page-sidebar .section-nav a {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Four lines of tracked caps shout on a 350px column; ease the tracking
+     without changing the label's size or case. */
+  .publication-row .paper-meta {
+    letter-spacing: 0.06em;
+  }
+
+  .paper-layout > .paper-figure {
+    margin-top: 0;
+  }
+}
