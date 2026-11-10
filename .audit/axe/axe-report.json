@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10T04:29:15.039Z",
+  "generatedAt": "2026-11-10T04:36:24.472Z",
   "baseUrl": "http://127.0.0.1:4319",
   "axeVersion": "4.14.0",
   "tags": [
@@ -24,15 +24,15 @@
   "results": {
     "desktop:index": {
       "violations": [],
-      "passes": 36,
+      "passes": 35,
       "incomplete": 0,
-      "inapplicable": 54
+      "inapplicable": 55
     },
     "desktop:profile": {
       "violations": [],
-      "passes": 36,
+      "passes": 34,
       "incomplete": 0,
-      "inapplicable": 54
+      "inapplicable": 56
     },
     "desktop:research": {
       "violations": [],
@@ -60,15 +60,15 @@
     },
     "mobile:index": {
       "violations": [],
-      "passes": 38,
+      "passes": 36,
       "incomplete": 0,
-      "inapplicable": 52
+      "inapplicable": 54
     },
     "mobile:profile": {
       "violations": [],
-      "passes": 38,
+      "passes": 36,
       "incomplete": 0,
-      "inapplicable": 52
+      "inapplicable": 54
     },
     "mobile:research": {
       "violations": [],
@@ -97,7 +97,7 @@
   },
   "totals": {
     "violations": 0,
-    "passes": 434,
+    "passes": 427,
     "pages": 6,
     "runs": 12
   }

@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-11-10T04:27:49.255Z",
+  "generatedAt": "2026-11-10T04:35:00.550Z",
   "baseUrl": "http://127.0.0.1:4319",
   "checks": [
     {
       "id": "VQ-06/light",
       "name": "본문 측정 폭 80ch 이하",
       "status": "PASS",
-      "detail": "max=63ch samples=10"
+      "detail": "max=79ch samples=9"
     },
     {
       "id": "VQ-12/light",
@@ -42,7 +42,7 @@
       "id": "VQ-06/dark",
       "name": "본문 측정 폭 80ch 이하",
       "status": "PASS",
-      "detail": "max=63ch samples=10"
+      "detail": "max=79ch samples=9"
     },
     {
       "id": "VQ-12/dark",
@@ -102,13 +102,13 @@
       "id": "VQ-05/index",
       "name": "첫 화면에 주 행동이 있다",
       "status": "PASS",
-      "detail": "[{\"text\":\"Read the research\",\"top\":462},{\"text\":\"Publications\",\"top\":462}]"
+      "detail": "[{\"text\":\"Read the research\",\"top\":237}]"
     },
     {
       "id": "VQ-07/index-mobile",
       "name": "모바일 첫 화면: H1 4줄 이하 + 행동 노출",
       "status": "PASS",
-      "detail": "lines=3 h1Height=106px vh=844 actions=2"
+      "detail": "lines=2 h1Height=74px vh=844 actions=1"
     },
     {
       "id": "VQ-08/all",
@@ -150,13 +150,13 @@
       "id": "VQ-18/all",
       "name": "날짜 표기 하나(점 표기), datetime 유효",
       "status": "PASS",
-      "detail": "18 time elements, precision shapes=[\"####. ##\",\"####\",\"####. ##. ##\"]"
+      "detail": "20 time elements, precision shapes=[\"####\",\"####. ##\",\"####. ##. ##\"]"
     },
     {
       "id": "VQ-21/index",
       "name": "키보드 포커스 링 2px 이상",
       "status": "PASS",
-      "detail": "21 distinct tab stops, all with a >=2px ring"
+      "detail": "19 distinct tab stops, all with a >=2px ring"
     },
     {
       "id": "VQ-22/index",
@@ -192,7 +192,7 @@
       "id": "VQ-30/index",
       "name": "누름·호버 상태에서도 라벨 대비가 4.5:1 이상",
       "status": "PASS",
-      "detail": "reachable=true statesDiffer=true lowest=dark/pressed=11.32:1"
+      "detail": "reachable=true statesDiffer=true lowest=light/hover=5.98:1"
     },
     {
       "id": "VQ-10/animated",
@@ -210,7 +210,7 @@
       "id": "VQ-11/reduced-motion",
       "name": "모션 감소 경로에서 모든 블록이 읽힌다",
       "status": "PASS",
-      "detail": "reveals=11 allReadable=true h1=1 pinnedScenes=0"
+      "detail": "reveals=17 allReadable=true h1=1 pinnedScenes=0"
     }
   ],
   "totals": {
