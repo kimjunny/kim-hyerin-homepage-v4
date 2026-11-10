@@ -206,3 +206,9 @@ Machine-readable probes this session wrote to the run directory
 Rule sources applied: `.audit/hig-universal-web.md` (75 rules),
 `.audit/ux-reference-pack.md` (37 recommendations),
 `.audit/frontend-visualqa-rules.md`, `.audit/impeccable-checklist.md` (165 items).
+
+## Redesign: assertions rewritten for the single-hero layout
+
+- VQ-10/animated: previously required the active story scene to be opaque and unblurred; the pinned story no longer exists, so it now requires every visible `.reveal`/hero block to be opaque and unfiltered after the scroll settles, at the same five offsets and the same 0.99 floor.
+- VQ-24/reduced-motion: previously checked the `.story__photo` stacking context; it now requires `.hero__media img` to cover more than half the viewport height (same 0.5 floor), be loaded, and be the element actually hit at its centre.
+- VQ-11/reduced-motion: previously required three scenes and a static stage; it now requires every `.reveal` block opaque, exactly one h1, and no `.story__scene` left.

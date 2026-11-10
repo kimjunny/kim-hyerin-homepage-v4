@@ -103,7 +103,7 @@ function pageHero() {
 function pinnedStory() {
   const story = document.querySelector(".story")
   const scenes = [...document.querySelectorAll(".story__scene")]
-  if (!story || scenes.length < 2) return
+  if (!story || scenes.length < 2) return // no pinned story on the redesigned hero
 
   const bar = story.querySelector(".story__progress span")
   const EASE = "cubic-bezier(0.16, 1, 0.3, 1)"
@@ -208,7 +208,7 @@ function onVisible(el, run) {
         run()
       }
     },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+    { rootMargin: "0px", threshold: 0 },
   )
   io.observe(el)
 }
