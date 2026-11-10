@@ -923,8 +923,9 @@ try {
     await page.close()
   }
 
-  // VQ-10 / VQ-24: motion paths. Scenes must be readable when settled, and
-  // the hero photo must survive the reduced-motion static path.
+  // VQ-10 / VQ-24 / VQ-11: motion paths on the single-hero layout. Settled
+  // content must be opaque and unfiltered, and the hero photo must survive the
+  // reduced-motion path.
   {
     const page = await browser.newPage()
     await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
@@ -933,23 +934,30 @@ try {
     const bad = []
     for (const y of offsets) {
       await page.evaluate((v) => window.scrollTo(0, v), y)
-      await new Promise((r) => setTimeout(r, 900))
+      await new Promise((r) => setTimeout(r, 1100))
       const state = await page.evaluate(() => {
-        const active = document.querySelector('.story__scene[data-active="true"]')
-        if (!active) return { none: true }
-        const cs = getComputedStyle(active)
-        return { op: Number(cs.opacity), blur: cs.filter }
+        const vh = window.innerHeight
+        const seen = [...document.querySelectorAll(".reveal, .hero__copy")].filter((e) => {
+          const r = e.getBoundingClientRect()
+          return r.bottom > 0 && r.top < vh
+        })
+        const offenders = seen
+          .map((e) => {
+            const cs = getComputedStyle(e)
+            return {
+              cls: String(e.className).split(" ")[0],
+              op: Number(cs.opacity),
+              blur: cs.filter,
+            }
+          })
+          .filter((s) => s.op < 0.99 || (s.blur !== "none" && !s.blur.includes("blur(0px")))
+        return { visible: seen.length, offenders }
       })
-      if (
-        state.none ||
-        state.op < 0.99 ||
-        (state.blur !== "none" && !state.blur.includes("blur(0px"))
-      )
-        bad.push({ y, state })
+      if (state.offenders.length) bad.push({ y, state })
     }
     add(
       "VQ-10/animated",
-      "스크롤이 멈춘 씬은 흐림 없이 완전 불투명",
+      "스크롤이 멈춘 뒤 보이는 블록은 흐림 없이 완전 불투명",
       bad.length === 0 ? "PASS" : "FAIL",
       bad.length ? JSON.stringify(bad) : `${offsets.length}/${offsets.length} offsets settled`,
     )
@@ -958,54 +966,42 @@ try {
     await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle0", timeout: 45000 })
     await new Promise((r) => setTimeout(r, 1200))
     const rm = await page.evaluate(() => {
-      const photo = document.querySelector(".story__photo")
-      const scenes = [...document.querySelectorAll(".story__scene")]
+      const photo = document.querySelector(".hero__media img")
       const vh = window.innerHeight
-      const visiblePhoto = photo
-        ? photo.getBoundingClientRect().height > vh * 0.5 &&
+      const box = photo ? photo.getBoundingClientRect() : null
+      const photoVisible = photo
+        ? box.height > vh * 0.5 &&
           Number(getComputedStyle(photo).opacity) > 0.05 &&
           photo.complete &&
           photo.naturalWidth > 0
         : false
-      // A photo at negative z-index only paints if an ancestor makes a stacking context.
-      let paints = false
+      // The photo must actually be the painted layer, not hidden under another box.
+      let photoPaints = false
       if (photo) {
-        let n = photo.parentElement
-        while (n && n !== document.documentElement) {
-          const cs = getComputedStyle(n)
-          if (
-            cs.isolation === "isolate" ||
-            cs.transform !== "none" ||
-            cs.filter !== "none" ||
-            cs.opacity !== "1" ||
-            cs.willChange.includes("transform") ||
-            cs.willChange.includes("opacity")
-          ) {
-            paints = true
-            break
-          }
-          n = n.parentElement
-        }
+        const hit = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2)
+        photoPaints = hit === photo || hit === photo.parentElement
       }
+      const reveals = [...document.querySelectorAll(".reveal")]
       return {
-        photoVisible: visiblePhoto,
-        photoPaints: paints,
-        scenes: scenes.length,
-        allReadable: scenes.every((s) => Number(getComputedStyle(s).opacity) >= 0.99),
-        stageStatic: getComputedStyle(document.querySelector(".story__stage")).position,
+        photoVisible,
+        photoPaints,
+        reveals: reveals.length,
+        allReadable: reveals.every((s) => Number(getComputedStyle(s).opacity) >= 0.99),
+        h1: document.querySelectorAll("h1").length,
+        pinned: document.querySelectorAll(".story__scene").length,
       }
     })
     add(
       "VQ-24/reduced-motion",
       "모션 감소 경로에서도 히어로 사진이 보인다",
       rm.photoVisible && rm.photoPaints ? "PASS" : "FAIL",
-      `photoVisible=${rm.photoVisible} paints=${rm.photoPaints} stage=${rm.stageStatic}`,
+      `photoVisible=${rm.photoVisible} paints=${rm.photoPaints}`,
     )
     add(
       "VQ-11/reduced-motion",
-      "모션 감소 경로에서 모든 씬이 읽힌다",
-      rm.allReadable && rm.scenes === 3 && rm.stageStatic === "static" ? "PASS" : "FAIL",
-      `scenes=${rm.scenes} allReadable=${rm.allReadable} stage=${rm.stageStatic}`,
+      "모션 감소 경로에서 모든 블록이 읽힌다",
+      rm.allReadable && rm.reveals > 0 && rm.h1 === 1 && rm.pinned === 0 ? "PASS" : "FAIL",
+      `reveals=${rm.reveals} allReadable=${rm.allReadable} h1=${rm.h1} pinnedScenes=${rm.pinned}`,
     )
     await page.close()
   }

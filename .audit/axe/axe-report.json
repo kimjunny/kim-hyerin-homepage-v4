@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T19:26:18.140Z",
+  "generatedAt": "2026-11-10T01:02:15.829Z",
   "baseUrl": "http://127.0.0.1:4319",
   "axeVersion": "4.14.0",
   "tags": [
@@ -25,7 +25,7 @@
     "desktop:index": {
       "violations": [],
       "passes": 36,
-      "incomplete": 1,
+      "incomplete": 0,
       "inapplicable": 54
     },
     "desktop:profile": {
@@ -61,7 +61,7 @@
     "mobile:index": {
       "violations": [],
       "passes": 38,
-      "incomplete": 1,
+      "incomplete": 0,
       "inapplicable": 52
     },
     "mobile:profile": {

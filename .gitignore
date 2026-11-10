@@ -11,3 +11,6 @@ Thumbs.db
 
 .vercel
 .env*
+
+# Local agent scratch (plans, workpools) - never part of the product.
+.omo/
