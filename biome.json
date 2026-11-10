@@ -1,17 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
   "files": {
-    "includes": [
-      "**",
-      "!dist",
-      "!node_modules",
-      "!.netlify",
-      "!.omo",
-      "!.audit/axe",
-      "!.audit/lighthouse",
-      "!.audit/visualqa",
-      "!.audit/shots"
-    ]
+    "includes": ["**", "!dist", "!node_modules", "!.vercel", "!.omo", "!**/*.tsbuildinfo"]
   },
   "formatter": {
     "enabled": true,

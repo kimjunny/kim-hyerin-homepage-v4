@@ -1,0 +1,36 @@
+/* Professor page — additions to laboratory.css.
+   The shared sheet already styles .page-head, .page-layout, .page-sidebar, dl.facts,
+   .reading-block, .link-cluster and .note. This file carries only what the Professor
+   page needs on top of that. Tokens come from laboratory.css.
+
+   Cascade note: `vite build` links this file BEFORE laboratory.css in the built <head>
+   (the dev server keeps source order), so every override here out-specifies the shared
+   selector by one class instead of relying on order. */
+
+/* The sidebar label is the professor's name, so it heads the facts card instead of
+   reading like one more field label: ink rather than muted, closed by the rule the
+   system uses under section headings. The first facts row then starts 14px below it. */
+.page-layout .page-sidebar > .eyebrow {
+  margin-bottom: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+}
+
+@media (max-width: 819px) {
+  /* Brief §3 "Page layout": below 820px the sidebar follows the content everywhere
+     except here, where the facts card (the professor's at-a-glance panel) stays first.
+     laboratory.css states this with .page-sidebar:has(> .facts); this rule repeats it
+     without :has() so browsers that lack :has() keep the same order. */
+  .page-layout .page-sidebar {
+    order: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  /* In the single column the card sits in the reading flow, so it closes with a
+     hairline before the first reading block instead of ending in open space. */
+  .page-layout .page-sidebar .facts > div:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+}

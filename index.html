@@ -3,28 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b1220" />
+    <meta name="theme-color" content="#FAF9F6" />
     <meta name="description" content="Social Pharmacy Laboratory at Sahmyook University. Research in health economics, outcomes research and pharmacy policy, led by Professor Hye-Lin Kim." />
     <meta property="og:title" content="Social Pharmacy Laboratory | Sahmyook University" />
     <meta property="og:description" content="Health economics and outcomes research at the College of Pharmacy, Sahmyook University." />
     <meta property="og:type" content="website" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/src/styles/v3.css" />
+    <link rel="stylesheet" href="/src/styles/laboratory.css" />
     <title>Social Pharmacy Laboratory | Sahmyook University</title>
-    <link rel="canonical" href="https://kim-hyerin-homepage-v4.vercel.app/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Social Pharmacy Laboratory" />
-    <meta property="og:title" content="Social Pharmacy Laboratory | Sahmyook University" />
-    <meta property="og:description" content="Health economics and outcomes research at the College of Pharmacy, Sahmyook University." />
-    <meta property="og:url" content="https://kim-hyerin-homepage-v4.vercel.app/" />
-    <meta property="og:image" content="https://kim-hyerin-homepage-v4.vercel.app/og-image.webp" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Social Pharmacy Laboratory, Hye-Lin Kim, Sahmyook University" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Social Pharmacy Laboratory | Sahmyook University" />
-    <meta name="twitter:description" content="Health economics and outcomes research at the College of Pharmacy, Sahmyook University." />
-    <meta name="twitter:image" content="https://kim-hyerin-homepage-v4.vercel.app/og-image.webp" />
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Hye-Lin Kim","jobTitle":"Associate Professor","affiliation":{"@type":"CollegeOrUniversity","name":"Sahmyook University"},"knowsAbout":"Social and administrative pharmacy","sameAs":["https://orcid.org/0000-0001-9091-8787","https://www.syu.ac.kr/pharmacy/faculty/professor/"]}
     </script>
@@ -45,116 +31,67 @@
         <details class="mobile-menu">
           <summary>Menu</summary>
           <nav aria-label="Mobile navigation">
-            <a href="/index.html" aria-current="page">Home</a>
-            <a href="/profile.html">Professor</a>
-            <a href="/research.html">Research</a>
-            <a href="/publications.html">Publications</a>
-            <a href="/education.html">Education</a>
-            <a href="/sources.html">Resources</a>
+          <a href="/index.html" aria-current="page">Home</a>
+          <a href="/profile.html">Professor</a>
+          <a href="/research.html">Research</a>
+          <a href="/publications.html">Publications</a>
+          <a href="/education.html">Education</a>
+          <a href="/sources.html">Resources</a>
           </nav>
         </details>
       </div>
     </header>
     <main id="main-content" tabindex="-1">
-      <section class="hero" aria-labelledby="lab-title">
-        <div class="hero__inner">
-          <div class="hero__copy reveal">
-            <h1 id="lab-title">Evidence that reaches pharmacy practice and policy</h1>
-            <p>Social Pharmacy Laboratory, College of Pharmacy, Sahmyook University: health economics, healthcare outcomes and pharmacy policy for evidence-based decisions.</p>
-            <div class="hero__actions">
-              <a class="button" href="/research.html">Read the research</a>
-              <a class="hero__link" href="/publications.html">Publications</a>
-            </div>
-          </div>
-          <div class="hero__media">
-            <img src="/images/campus-1280.svg" srcset="/images/campus-640.svg 640w, /images/campus-1280.svg 1280w" sizes="(min-width: 960px) 50vw, 100vw" width="1280" height="853" alt="" fetchpriority="high" decoding="async" />
-          </div>
+      <section class="lab-banner shell" aria-labelledby="lab-title">
+        <div class="banner-copy">
+          <h1 id="lab-title"><span class="hero-line">Social Pharmacy Laboratory</span> <span class="hero-at"><span class="at-sign">@</span> Sahmyook University</span></h1>
+          <p>We study health economics, healthcare outcomes and pharmacy policy to inform evidence-based healthcare decisions.</p>
+        </div>
+        <div class="hero-media">
+          <img class="campus-photo" src="/images/campus-1280.svg" srcset="/images/campus-640.svg 640w, /images/campus-1280.svg 1280w" sizes="100vw" width="1280" height="853" alt="" fetchpriority="high" decoding="async" />
         </div>
       </section>
-
-      <section class="section" aria-labelledby="featured-title">
+      <section class="notice-band" aria-labelledby="notice-title">
         <div class="shell">
-          <div class="section__head reveal">
-            <h2 id="featured-title" class="lede">Featured research</h2>
-          </div>
-          <ul class="feature-grid">
-            <li class="feature reveal" style="--i: 0">
-              <a href="/publications.html#masld">
-                <span class="feature__plate">Clinical and Molecular Hepatology</span>
-                <span class="overline">Journal · 2026</span>
-                <h3>Treatment response thresholds for cost-effective MASLD treatment</h3>
-                <p>When does treating fatty liver disease pay for itself?</p>
-              </a>
-            </li>
-            <li class="feature reveal" style="--i: 1">
-              <a href="https://doi.org/10.1136/gutjnl-2020-321309" target="_blank" rel="noreferrer">
-                <span class="feature__plate">Gut</span>
-                <span class="overline">Journal · 2021</span>
-                <h3>Antiviral treatment in immune-tolerant chronic hepatitis B</h3>
-                <p>Costs and health outcomes of immediate versus delayed treatment.</p>
-              </a>
-            </li>
-            <li class="feature reveal" style="--i: 2">
-              <a href="/research.html">
-                <span class="feature__plate">Research programme</span>
-                <span class="overline">Methods</span>
-                <h3>Economic evaluation and real-world data</h3>
-                <p>Methods chosen to suit each research question.</p>
-              </a>
-            </li>
-          </ul>
+          <h2 id="notice-title">Notice</h2>
+          <ul class="news-list"><li>For graduate study and application information, please refer to the <a href="https://www.syu.ac.kr/pharmacy/undergraduate-information/graduate-school/laboratory-by-major/" target="_blank" rel="noreferrer">College of Pharmacy's graduate laboratory guide</a>.</li></ul>
         </div>
       </section>
-
-      <section class="section section--wash" aria-labelledby="news-title">
-        <div class="shell">
-          <div class="section__head reveal">
-            <h2 id="news-title" class="lede">Latest news</h2>
-          </div>
-          <div class="news">
-            <a class="news__lead reveal" href="https://www.syu.ac.kr/blog/%EA%B3%A0%EA%B0%80%EC%9D%98-%EC%A7%80%EB%B0%A9%EA%B0%84-%EC%8B%A0%EC%95%BD-%EB%8F%88%EA%B0%92-%ED%95%A0%EA%B9%8C-%EA%B9%80%ED%98%9C%EB%A6%B0-%EA%B5%90%EC%88%98-%EB%B9%84%EC%9A%A9/" target="_blank" rel="noreferrer">
-              <span class="feature__plate">Sahmyook University interview</span>
-              <span class="overline"><time datetime="2026-05">2026. 05</time></span>
-              <h3>Is a fatty liver drug worth its price?</h3>
-              <p>Professor Hye-Lin Kim discussed the cost-effectiveness of new treatments for fatty liver disease.</p>
-            </a>
-            <ul class="news__rows">
-              <li class="reveal"><a href="/publications.html#masld"><span class="overline"><time datetime="2026">2026</time></span><span class="news__title">The MASLD threshold study appears in Clinical and Molecular Hepatology</span></a></li>
-              <li class="reveal"><a href="https://www.syu.ac.kr/pharmacy/2024/09/04/8785/" target="_blank" rel="noreferrer"><span class="overline"><time datetime="2024-09">2024. 09</time></span><span class="news__title">Community pharmacy practice-site visit with preceptors and students</span></a></li>
-              <li class="reveal"><a href="/profile.html"><span class="overline"><time datetime="2016-03">2016. 03</time></span><span class="news__title">Hye-Lin Kim joined the College of Pharmacy at Sahmyook University</span></a></li>
-            </ul>
-          </div>
+      <section class="lab-index shell" aria-labelledby="index-title">
+        <h2 id="index-title">Research and teaching</h2>
+        <div class="index-grid">
+          <article>
+            <h3><a href="/research.html">Research</a></h3>
+            <p>Health economics, outcomes research, and pharmaceutical policy, using economic evaluation and real-world data.</p>
+          </article>
+          <article>
+            <h3><a href="/publications.html">Publications</a></h3>
+            <p>Selected studies in cost-effectiveness and treatment outcomes, with DOI and PubMed links.</p>
+          </article>
+          <article>
+            <h3><a href="/education.html">Education</a></h3>
+            <p>Graduate research in the Social Pharmacy Laboratory and community pharmacy practice activities.</p>
+          </article>
         </div>
       </section>
-
-      <section class="section section--tight" aria-labelledby="pi-title">
-        <div class="shell">
-          <div class="pi-band reveal">
-            <div>
-              <span class="overline">Principal investigator</span>
-              <h2 id="pi-title" class="lede">Hye-Lin Kim</h2>
-              <p>Professor, College of Pharmacy, Sahmyook University. For graduate study and application information, please refer to the <a href="https://www.syu.ac.kr/pharmacy/undergraduate-information/graduate-school/laboratory-by-major/" target="_blank" rel="noreferrer">College of Pharmacy's graduate laboratory guide</a>.</p>
-            </div>
-            <a class="button button--solid" href="/profile.html">Profile and contact</a>
-          </div>
-        </div>
+      <section class="news-section shell" aria-labelledby="news-title">
+        <h2 id="news-title">Latest News</h2>
+        <ul class="news-list">
+          <li><time datetime="2026-05">2026.05</time><span>Professor Hye-Lin Kim discussed the cost-effectiveness of new treatments for fatty liver disease in a <a href="https://www.syu.ac.kr/blog/%EA%B3%A0%EA%B0%80%EC%9D%98-%EC%A7%80%EB%B0%A9%EA%B0%84-%EC%8B%A0%EC%95%BD-%EB%8F%88%EA%B0%92-%ED%95%A0%EA%B9%8C-%EA%B9%80%ED%98%9C%EB%A6%B0-%EA%B5%90%EC%88%98-%EB%B9%84%EC%9A%A9/" target="_blank" rel="noreferrer">Sahmyook University interview</a>.</span></li>
+          <li><time datetime="2026">2026</time><span>The study <a href="/publications.html#masld">Evaluating treatment response thresholds for cost-effective treatment in metabolic dysfunction-associated steatotic liver disease</a> appears in <em>Clinical and Molecular Hepatology</em>.</span></li>
+          <li><time datetime="2025">2025</time><span>The MASLD treatment-response study was <a href="https://www.e-cmh.org/journal/view.php?doi=10.3350/cmh.2025.0796" target="_blank" rel="noreferrer">published online</a> ahead of its 2026 volume and issue.</span></li>
+          <li><time datetime="2024-09">2024.09</time><span>A <a href="https://www.syu.ac.kr/pharmacy/2024/09/04/8785/" target="_blank" rel="noreferrer">community pharmacy practice-site visit</a> brought together preceptors and students to discuss their field experience.</span></li>
+          <li><time datetime="2021">2021</time><span>A study of <a href="https://doi.org/10.1136/gutjnl-2020-321309" target="_blank" rel="noreferrer">antiviral treatment in immune-tolerant chronic hepatitis B</a> compared the costs and health outcomes of immediate and delayed treatment in <em>Gut</em>.</span></li>
+          <li><time datetime="2016-03">2016.03</time><span><a href="/profile.html">Hye-Lin Kim</a> joined the College of Pharmacy at Sahmyook University.</span></li>
+        </ul>
       </section>
     </main>
     <footer class="site-footer">
       <div class="shell footer-inner">
         <div><strong>Social Pharmacy Laboratory</strong><p>College of Pharmacy, Sahmyook University</p><p>Health economics &amp; outcomes research</p></div>
-        <div class="footer-links">
-          <a href="mailto:kimhye-lin@syu.ac.kr">kimhye-lin@syu.ac.kr</a>
-          <a href="tel:+82233991625">+82 2 3399 1625</a>
-          <a href="https://www.syu.ac.kr/pharmacy/faculty/professor/" target="_blank" rel="noreferrer">Faculty directory</a>
-          <a href="https://orcid.org/0000-0001-9091-8787" target="_blank" rel="noreferrer">ORCID</a>
-          <a href="/sources.html">Resources &amp; credits</a>
-          <a href="#top">Back to top</a>
-        </div>
-        <p class="footer-updated">Last updated <time datetime="2026-11-09">2026. 11. 09</time></p>
+        <div class="footer-links"><a href="https://www.syu.ac.kr/pharmacy/faculty/professor/" target="_blank" rel="noreferrer">Faculty directory</a><a href="https://orcid.org/0000-0001-9091-8787" target="_blank" rel="noreferrer">ORCID</a><a href="/sources.html">Resources &amp; credits</a><a href="#top">Back to top</a></div>
         <p class="photo-credit">Campus photograph: <a href="https://www.syu.ac.kr/wp-content/uploads/2025/12/%EC%82%AC%EC%A7%842-%EC%82%BC%EC%9C%A1%EB%8C%80-%EC%A0%84%EA%B2%BD-scaled.jpg" target="_blank" rel="noreferrer">Sahmyook University</a></p>
       </div>
     </footer>
-    <script type="module" src="/src/motion/story.js"></script>
   </body>
 </html>

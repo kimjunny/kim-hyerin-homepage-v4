@@ -1,5 +1,5 @@
 {
-  "name": "kim-hyerin-homepage-v3",
+  "name": "kim-hyerin-homepage",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -8,18 +8,12 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check": "biome check .",
-    "qa:a11y": "node scripts/a11y-gate.mjs",
-    "qa:visual": "node scripts/visual-gate.mjs",
-    "qa:shots": "node scripts/capture-fullpage.mjs"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.2",
-    "axe-core": "^4.14.0",
-    "lighthouse": "^13.6.0",
-    "puppeteer-core": "^25.16.0",
+    "@types/bun": "1.4.1",
+    "typescript": "7.0.2",
     "vite": "7.1.4"
-  },
-  "dependencies": {
-    "animejs": "^4.5.0"
   }
 }

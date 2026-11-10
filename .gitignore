@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .vercel/
+.omo/
 *.log
 *.tsbuildinfo
 .DS_Store
@@ -8,9 +9,3 @@ Thumbs.db
 
 .env.local
 .env.vercel-*
-
-.vercel
-.env*
-
-# Local agent scratch (plans, workpools) - never part of the product.
-.omo/
