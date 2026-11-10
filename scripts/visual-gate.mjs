@@ -966,7 +966,7 @@ try {
     await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle0", timeout: 45000 })
     await new Promise((r) => setTimeout(r, 1200))
     const rm = await page.evaluate(() => {
-      const photo = document.querySelector(".hero__media img")
+      const photo = document.querySelector(".about-figure img")
       const vh = window.innerHeight
       const box = photo ? photo.getBoundingClientRect() : null
       const photoVisible = photo
